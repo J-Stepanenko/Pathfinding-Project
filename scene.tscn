@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4peo0ywrglr1"]
+
+[ext_resource type="Script" uid="uid://x7hp7kt4660i" path="res://Tile.cs" id="1_ulcgi"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_nxogm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3253y"]
+size = Vector2(1, 1)
+
+[node name="Scene" type="Node2D"]
+
+[node name="Node" type="Node" parent="."]
+
+[node name="Tile" type="Node2D" parent="Node"]
+script = ExtResource("1_ulcgi")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Node/Tile"]
+position = Vector2(2.875, 2.875)
+scale = Vector2(5.7500005, 5.7500005)
+mesh = SubResource("QuadMesh_nxogm")
+
+[node name="Area2D" type="Area2D" parent="Node/Tile/MeshInstance2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node/Tile/MeshInstance2D/Area2D"]
+scale = Vector2(1.0000001, 1.0000001)
+shape = SubResource("RectangleShape2D_3253y")
