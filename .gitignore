@@ -2,3 +2,5 @@
 .godot/
 /android/
 *.vsidx
+.vs/
+.editorconfig
