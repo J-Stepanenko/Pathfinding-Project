@@ -10,12 +10,14 @@ public partial class Tile : Node2D
 
 	public Vector2I GridPosition;
 	public bool Highlighted = false;
+	public bool CanPass;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		var meshInstance = this.GetChild<MeshInstance2D>(0);
         area = meshInstance.GetChild<Area2D>(0);
 		area.InputEvent += _on_mouse_press;
+		CanPass = IsWalkable;
 
 		GridPosition = Utilities.GetGridPosFromNode(this);
 
@@ -63,16 +65,16 @@ public partial class Tile : Node2D
 			var agent = GridManager.Instance.GetAgent(GridPosition);
 			if (agent.Team != TurnManager.Instance.TeamTurn)
 			{
-				IsWalkable = false;
+				CanPass = false;
 			}
 			else
 			{
-				IsWalkable = true;
+                CanPass = IsWalkable;
 			}
 		}
 		else
 		{
-			IsWalkable = true;
+            CanPass = IsWalkable;
 		}
 	}
 }

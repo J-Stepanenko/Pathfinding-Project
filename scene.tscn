@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://c4peo0ywrglr1"]
+[gd_scene load_steps=5 format=3 uid="uid://c4peo0ywrglr1"]
 
-[ext_resource type="PackedScene" uid="uid://ce2oqp1oeti70" path="res://BasicTile.tscn" id="1_nxogm"]
+[ext_resource type="PackedScene" uid="uid://ce2oqp1oeti70" path="res://basic_tile.tscn" id="1_nxogm"]
 [ext_resource type="PackedScene" uid="uid://3angrksctdgc" path="res://agent.tscn" id="2_3253y"]
+[ext_resource type="PackedScene" uid="uid://6bdbj5tho366" path="res://impassable_tile.tscn" id="2_u3cyc"]
 [ext_resource type="Script" uid="uid://cdmgrhfl64sa0" path="res://scripts/UI.cs" id="3_3253y"]
 
 [node name="Scene" type="Node2D"]
@@ -22,9 +23,6 @@ position = Vector2(350, 50)
 
 [node name="Tile5" parent="Grid" instance=ExtResource("1_nxogm")]
 position = Vector2(450, 50)
-
-[node name="Tile6" parent="Grid" instance=ExtResource("1_nxogm")]
-position = Vector2(550, 50)
 
 [node name="Tile7" parent="Grid" instance=ExtResource("1_nxogm")]
 position = Vector2(650, 50)
@@ -59,9 +57,6 @@ position = Vector2(350, 150)
 [node name="Tile17" parent="Grid" instance=ExtResource("1_nxogm")]
 position = Vector2(450, 150)
 
-[node name="Tile18" parent="Grid" instance=ExtResource("1_nxogm")]
-position = Vector2(550, 150)
-
 [node name="Tile19" parent="Grid" instance=ExtResource("1_nxogm")]
 position = Vector2(650, 150)
 
@@ -94,9 +89,6 @@ position = Vector2(350, 250)
 
 [node name="Tile29" parent="Grid" instance=ExtResource("1_nxogm")]
 position = Vector2(450, 250)
-
-[node name="Tile30" parent="Grid" instance=ExtResource("1_nxogm")]
-position = Vector2(550, 250)
 
 [node name="Tile31" parent="Grid" instance=ExtResource("1_nxogm")]
 position = Vector2(650, 250)
@@ -260,14 +252,23 @@ position = Vector2(1050, 650)
 [node name="Tile84" parent="Grid" instance=ExtResource("1_nxogm")]
 position = Vector2(1150, 650)
 
+[node name="ImpassableTile" parent="Grid" instance=ExtResource("2_u3cyc")]
+position = Vector2(550, 50)
+
+[node name="ImpassableTile2" parent="Grid" instance=ExtResource("2_u3cyc")]
+position = Vector2(550, 150)
+
+[node name="ImpassableTile3" parent="Grid" instance=ExtResource("2_u3cyc")]
+position = Vector2(550, 250)
+
 [node name="Characters" type="Node" parent="."]
 
 [node name="Agent" parent="Characters" instance=ExtResource("2_3253y")]
-position = Vector2(350, 350)
+position = Vector2(350, 150)
 Team = 1
 
 [node name="Agent2" parent="Characters" instance=ExtResource("2_3253y")]
-position = Vector2(750, 350)
+position = Vector2(750, 150)
 Team = 2
 
 [node name="UI" type="Node" parent="."]
