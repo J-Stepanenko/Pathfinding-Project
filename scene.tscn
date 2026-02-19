@@ -1,26 +1,162 @@
-[gd_scene load_steps=4 format=3 uid="uid://c4peo0ywrglr1"]
+[gd_scene load_steps=7 format=3 uid="uid://c4peo0ywrglr1"]
 
 [ext_resource type="Script" uid="uid://x7hp7kt4660i" path="res://Tile.cs" id="1_ulcgi"]
+[ext_resource type="Script" uid="uid://bw2idafg0sggh" path="res://Agent.cs" id="2_nxogm"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_nxogm"]
+size = Vector2(100, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3253y"]
-size = Vector2(1, 1)
+size = Vector2(0.9999999, 0.9999999)
+
+[sub_resource type="QuadMesh" id="QuadMesh_3253y"]
+size = Vector2(100, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nxogm"]
 
 [node name="Scene" type="Node2D"]
 
-[node name="Node" type="Node" parent="."]
+[node name="Grid" type="Node" parent="."]
 
-[node name="Tile" type="Node2D" parent="Node"]
+[node name="Tile" type="Node2D" parent="Grid"]
+position = Vector2(50, 50)
 script = ExtResource("1_ulcgi")
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="Node/Tile"]
-position = Vector2(2.875, 2.875)
-scale = Vector2(5.7500005, 5.7500005)
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Grid/Tile"]
 mesh = SubResource("QuadMesh_nxogm")
 
-[node name="Area2D" type="Area2D" parent="Node/Tile/MeshInstance2D"]
+[node name="Area2D" type="Area2D" parent="Grid/Tile/MeshInstance2D"]
+scale = Vector2(100, 100)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Node/Tile/MeshInstance2D/Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Tile/MeshInstance2D/Area2D"]
 scale = Vector2(1.0000001, 1.0000001)
 shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Tile2" type="Node2D" parent="Grid"]
+position = Vector2(150, 50)
+script = ExtResource("1_ulcgi")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Grid/Tile2"]
+mesh = SubResource("QuadMesh_nxogm")
+
+[node name="Area2D" type="Area2D" parent="Grid/Tile2/MeshInstance2D"]
+scale = Vector2(100, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Tile2/MeshInstance2D/Area2D"]
+scale = Vector2(1.0000001, 1.0000001)
+shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Tile3" type="Node2D" parent="Grid"]
+position = Vector2(250, 50)
+script = ExtResource("1_ulcgi")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Grid/Tile3"]
+mesh = SubResource("QuadMesh_nxogm")
+
+[node name="Area2D" type="Area2D" parent="Grid/Tile3/MeshInstance2D"]
+scale = Vector2(100, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Tile3/MeshInstance2D/Area2D"]
+scale = Vector2(1.0000001, 1.0000001)
+shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Tile4" type="Node2D" parent="Grid"]
+position = Vector2(50, 150)
+script = ExtResource("1_ulcgi")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Grid/Tile4"]
+mesh = SubResource("QuadMesh_nxogm")
+
+[node name="Area2D" type="Area2D" parent="Grid/Tile4/MeshInstance2D"]
+scale = Vector2(100, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Tile4/MeshInstance2D/Area2D"]
+scale = Vector2(1.0000001, 1.0000001)
+shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Tile5" type="Node2D" parent="Grid"]
+position = Vector2(150, 150)
+script = ExtResource("1_ulcgi")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Grid/Tile5"]
+mesh = SubResource("QuadMesh_nxogm")
+
+[node name="Area2D" type="Area2D" parent="Grid/Tile5/MeshInstance2D"]
+scale = Vector2(100, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Tile5/MeshInstance2D/Area2D"]
+scale = Vector2(1.0000001, 1.0000001)
+shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Tile6" type="Node2D" parent="Grid"]
+position = Vector2(250, 150)
+script = ExtResource("1_ulcgi")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Grid/Tile6"]
+mesh = SubResource("QuadMesh_nxogm")
+
+[node name="Area2D" type="Area2D" parent="Grid/Tile6/MeshInstance2D"]
+scale = Vector2(100, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Tile6/MeshInstance2D/Area2D"]
+scale = Vector2(1.0000001, 1.0000001)
+shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Tile7" type="Node2D" parent="Grid"]
+position = Vector2(50, 250)
+script = ExtResource("1_ulcgi")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Grid/Tile7"]
+mesh = SubResource("QuadMesh_nxogm")
+
+[node name="Area2D" type="Area2D" parent="Grid/Tile7/MeshInstance2D"]
+scale = Vector2(100, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Tile7/MeshInstance2D/Area2D"]
+scale = Vector2(1.0000001, 1.0000001)
+shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Tile8" type="Node2D" parent="Grid"]
+position = Vector2(150, 250)
+script = ExtResource("1_ulcgi")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Grid/Tile8"]
+mesh = SubResource("QuadMesh_nxogm")
+
+[node name="Area2D" type="Area2D" parent="Grid/Tile8/MeshInstance2D"]
+scale = Vector2(100, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Tile8/MeshInstance2D/Area2D"]
+scale = Vector2(1.0000001, 1.0000001)
+shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Tile9" type="Node2D" parent="Grid"]
+position = Vector2(250, 250)
+script = ExtResource("1_ulcgi")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Grid/Tile9"]
+mesh = SubResource("QuadMesh_nxogm")
+
+[node name="Area2D" type="Area2D" parent="Grid/Tile9/MeshInstance2D"]
+scale = Vector2(100, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Grid/Tile9/MeshInstance2D/Area2D"]
+scale = Vector2(1.0000001, 1.0000001)
+shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Characters" type="Node" parent="."]
+
+[node name="Agent" type="Node2D" parent="Characters"]
+position = Vector2(50, 50)
+script = ExtResource("2_nxogm")
+moves = 1
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Characters/Agent"]
+modulate = Color(0.838776, 0.1164641, 0.17806125, 1)
+mesh = SubResource("QuadMesh_3253y")
+
+[node name="Area2D" type="Area2D" parent="Characters/Agent/MeshInstance2D"]
+scale = Vector2(5, 5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Characters/Agent/MeshInstance2D/Area2D"]
+shape = SubResource("RectangleShape2D_nxogm")

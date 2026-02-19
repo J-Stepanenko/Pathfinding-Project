@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Thesis"
+run/main_scene="uid://c4peo0ywrglr1"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
