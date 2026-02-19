@@ -4,12 +4,16 @@ using System;
 public partial class TurnManager : Node
 {
     public static TurnManager Instance { get; private set; }
-
+    public int Turn;
+    public int TeamTurn;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         Instance = this;
+
+        Turn = 1;
+        TeamTurn = 1;
         GD.Print("TurnManager loaded");
     }
 
@@ -20,6 +24,17 @@ public partial class TurnManager : Node
 
     public void EndTurn()
     {
+        if (TeamTurn+1 > 2)
+        {
+            TeamTurn = 1;
+            Turn++;
+        }
+        else
+        {
+            TeamTurn++;
+        }
+        GD.Print("Turn: "+Turn);
+        GD.Print("Team: "+TeamTurn);
         EmitSignal(SignalName.TurnEnded);
     }
 

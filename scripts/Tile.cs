@@ -20,6 +20,7 @@ public partial class Tile : Node2D
 		GridPosition = Utilities.GetGridPosFromNode(this);
 
         GridManager.Instance.RegisterTile(GridPosition, this);
+        TurnManager.Instance.TurnEnded += OnTurnEnd;
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -52,6 +53,26 @@ public partial class Tile : Node2D
 			{
 
 			}
+		}
+	}
+
+	private void OnTurnEnd()
+	{
+		if (GridManager.Instance.CheckTileHasAgent(GridPosition))
+		{
+			var agent = GridManager.Instance.GetAgent(GridPosition);
+			if (agent.Team != TurnManager.Instance.TeamTurn)
+			{
+				IsWalkable = false;
+			}
+			else
+			{
+				IsWalkable = true;
+			}
+		}
+		else
+		{
+			IsWalkable = true;
 		}
 	}
 }

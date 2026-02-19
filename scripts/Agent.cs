@@ -7,6 +7,7 @@ public partial class Agent : Node2D
     private Area2D area;
 
     [Export] public int MoveRange;
+    [Export] public int Team;
     public Vector2I GridPosition;
     public bool CanMove;
 
@@ -44,6 +45,12 @@ public partial class Agent : Node2D
 
     public void OnSelected()
     {
+        // Check if it is this agent's turn
+        if (TurnManager.Instance.TeamTurn != Team)
+        {
+            return;
+        }
+
         GridPosition = Utilities.GetGridPosFromNode(this);
         if (CanMove)
         {

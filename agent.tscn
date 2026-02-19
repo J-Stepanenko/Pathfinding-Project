@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://3angrksctdgc"]
+
+[ext_resource type="Script" uid="uid://bw2idafg0sggh" path="res://scripts/Agent.cs" id="1_jv27j"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_3253y"]
+size = Vector2(100, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nxogm"]
+
+[node name="Agent" type="Node2D"]
+script = ExtResource("1_jv27j")
+MoveRange = 4
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+modulate = Color(0.838776, 0.1164641, 0.17806125, 1)
+mesh = SubResource("QuadMesh_3253y")
+
+[node name="Area2D" type="Area2D" parent="MeshInstance2D"]
+scale = Vector2(5, 5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MeshInstance2D/Area2D"]
+shape = SubResource("RectangleShape2D_nxogm")
