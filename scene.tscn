@@ -254,17 +254,24 @@ position = Vector2(1150, 650)
 
 [node name="ImpassableTile" parent="Grid" instance=ExtResource("2_u3cyc")]
 position = Vector2(550, 50)
+MoveCost = 10
+IsWalkable = true
 
 [node name="ImpassableTile2" parent="Grid" instance=ExtResource("2_u3cyc")]
 position = Vector2(550, 150)
+MoveCost = 10
+IsWalkable = true
 
 [node name="ImpassableTile3" parent="Grid" instance=ExtResource("2_u3cyc")]
 position = Vector2(550, 250)
+MoveCost = 10
+IsWalkable = true
 
 [node name="Characters" type="Node" parent="."]
 
 [node name="Agent" parent="Characters" instance=ExtResource("2_3253y")]
 position = Vector2(350, 150)
+MoveRange = 50
 Team = 1
 
 [node name="Agent2" parent="Characters" instance=ExtResource("2_3253y")]

@@ -43,11 +43,16 @@ public partial class InputManager : Node
 
 			// Move agent and add new position to grid manager
 			var newPos = Utilities.GetGridPosFromNode(tile);
+			var path = GridManager.Instance.GetPath(oldPos, newPos);
 			selectedAgent.MoveAgent(newPos);
 			GridManager.Instance.RegisterAgent(newPos, selectedAgent);
 
-			DeselectAgent();
-		}
+            DeselectAgent();
+            foreach (var point in path)
+            {
+                GridManager.Instance.GetTile(point).ShowPath();
+            }
+        }
 		else
 		{
 			DeselectAgent();

@@ -9,17 +9,30 @@ public partial class GridManager : Node
 	private Dictionary<Vector2I, Tile> tiles = new();
 	private Dictionary<Vector2I, Agent> agents = new();
 	private Agent selectedAgent;
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+    private AStar2D astar = new AStar2D();
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
 	{
 		Instance = this;
 		GD.Print("GridManager loaded");
-	}
+
+        // Wait until all tiles have registered before building A* graph
+        CallDeferred(nameof(InitGrid));
+        CallDeferred(nameof(BuildAStar));
+    }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 	}
+
+    private void InitGrid()
+    {
+        foreach (Tile tile in tiles.Values)
+        {
+            tile.Init();
+        }
+    }
 
 	public void RegisterTile(Vector2I gridPos, Tile tile)
 	{
@@ -80,7 +93,7 @@ public partial class GridManager : Node
                 if (!tiles.ContainsKey(neighbor)) continue;
 
                 var tile = GetTile(neighbor);
-                if (!tile.IsWalkable) continue;
+                if (!tile.CanPass) continue;
 
                 int newCost = currentCost + tile.MoveCost;
 
@@ -105,5 +118,71 @@ public partial class GridManager : Node
         {
             tile.SetHighlight(highlight);
         }
+    }
+    public void BuildAStar()
+    {
+        // Add all tiles as points
+        foreach (var (gridPos, tile) in tiles)
+        {
+            long id = GetIdFromGridPos(gridPos);
+            astar.AddPoint(id, (Vector2)gridPos, tile.MoveCost);
+        }
+
+        // Connect neighbours
+        Vector2I[] directions = {
+            Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
+        };
+
+        foreach (var (gridPos, tile) in tiles)
+        {
+            foreach (var dir in directions)
+            {
+                var neighbour = gridPos + dir;
+                if (!tiles.ContainsKey(neighbour)) continue;
+                if (!tiles[neighbour].IsWalkable) continue;
+
+                long idA = GetIdFromGridPos(gridPos);
+                long idB = GetIdFromGridPos(neighbour);
+
+                if (!astar.ArePointsConnected(idA, idB))
+                    astar.ConnectPoints(idA, idB);
+
+                if (!tile.CanPass)
+                {
+                    astar.SetPointDisabled(idA, true);
+                }
+            }
+        }
+    }
+    public List<Vector2I> GetPath(Vector2I from, Vector2I to)
+    {
+        long idFrom = GetIdFromGridPos(from);
+        long idTo = GetIdFromGridPos(to);
+
+        var path = astar.GetPointPath(idFrom, idTo);
+
+        var gridPath = new List<Vector2I>();
+        foreach (var point in path)
+            gridPath.Add((Vector2I)point);
+
+        GD.Print("path:");
+        foreach(var point in path)
+        {
+            GD.Print(point);
+        }
+
+        return gridPath;
+    }
+
+    public void SetTileOccupied(Vector2I gridPos, bool occupied)
+    {
+        long id = GetIdFromGridPos(gridPos);
+        astar.SetPointDisabled(id, occupied);
+    }
+
+    // Create long ID for A*
+    private long GetIdFromGridPos(Vector2I gridPos)
+    {
+        return gridPos.X + gridPos.Y * 1000; // Assume grid is never wider than 1000
     }
 }

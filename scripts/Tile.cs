@@ -25,6 +25,28 @@ public partial class Tile : Node2D
         TurnManager.Instance.TurnEnded += OnTurnEnd;
     }
 
+	// Check if an agent has begun on this tile
+	// Must be called by GridManager as order is important
+	public void Init()
+	{
+        if (GridManager.Instance.CheckTileHasAgent(GridPosition))
+        {
+            var agent = GridManager.Instance.GetAgent(GridPosition);
+            if (agent.Team != TurnManager.Instance.TeamTurn)
+            {
+                CanPass = false;
+            }
+            else
+            {
+                CanPass = IsWalkable;
+            }
+        }
+        else
+        {
+            CanPass = IsWalkable;
+        }
+    }
+
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
@@ -76,5 +98,15 @@ public partial class Tile : Node2D
 		{
             CanPass = IsWalkable;
 		}
+		if (IsWalkable)
+		{
+			GridManager.Instance.SetTileOccupied(GridPosition, !CanPass);
+		}
+	}
+
+	public void ShowPath()
+	{
+		var mesh = this.GetChild<MeshInstance2D>(0);
+		mesh.SelfModulate = Colors.Blue;
 	}
 }
