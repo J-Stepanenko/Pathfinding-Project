@@ -8,18 +8,22 @@ public partial class Agent : Node2D
 
     [Export] public int MoveRange;
     public Vector2I GridPosition;
+    public bool CanMove;
 
-    private List<Tile> highlightedTiles = new();
+    private List<Tile> reachableTiles = new();
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
+        CanMove = true;
         var meshInstance = this.GetChild<MeshInstance2D>(0);
         area = meshInstance.GetChild<Area2D>(0);
         area.InputEvent += _on_mouse_press;
 
-        var x = this.Position.X - 50; // Offset by 50
-        var y = this.Position.Y - 50;
-        GridPosition = new Vector2I((int)x / 100, (int)y / 100);
+        GridPosition = Utilities.GetGridPosFromNode(this);
+
+        GridManager.Instance.RegisterAgent(GridPosition, this);
+
+        TurnManager.Instance.TurnEnded += OnTurnEnd;
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,26 +37,36 @@ public partial class Agent : Node2D
         {
             if (mouseEvent.ButtonIndex == MouseButton.Left)
             {
-                OnSelected();
+                InputManager.Instance.SelectAgent(this);
             }
         }
     }
 
     public void OnSelected()
     {
-        highlightedTiles = GridManager.Instance.GetReachableTiles(GridPosition, MoveRange);
-        foreach (var tile in highlightedTiles)
+        GridPosition = Utilities.GetGridPosFromNode(this);
+        if (CanMove)
         {
-            tile.SetHighlight(true);
+            reachableTiles = GridManager.Instance.GetReachableTiles(GridPosition, MoveRange);
+            GridManager.Instance.HighlightTiles(reachableTiles, true);
         }
     }
 
     public void OnDeselected()
     {
-        foreach (var tile in highlightedTiles)
-        {
-            tile.SetHighlight(false);
-        }
-        highlightedTiles.Clear();
+        GridManager.Instance.HighlightTiles(reachableTiles, false);
+        reachableTiles.Clear();
+    }
+
+    public void MoveAgent(Vector2I gridPos)
+    {
+        GD.Print(gridPos);
+        this.Position = Utilities.GetRealCoordinatesFromGridPos(gridPos);
+        CanMove = false;
+    }
+
+    private void OnTurnEnd()
+    {
+        CanMove = true;
     }
 }

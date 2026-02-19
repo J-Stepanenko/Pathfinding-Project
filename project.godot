@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GridManager="*res://scripts/GridManager.cs"
 InputManager="*res://scripts/InputManager.cs"
+TurnManager="*res://scripts/TurnManager.cs"
 
 [dotnet]
 

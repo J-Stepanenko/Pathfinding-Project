@@ -17,9 +17,7 @@ public partial class Tile : Node2D
         area = meshInstance.GetChild<Area2D>(0);
 		area.InputEvent += _on_mouse_press;
 
-		var x = this.Position.X - 50; // Offset by 50
-		var y = this.Position.Y - 50;
-		GridPosition = new Vector2I((int)x / 100, (int)y / 100);
+		GridPosition = Utilities.GetGridPosFromNode(this);
 
         GridManager.Instance.RegisterTile(GridPosition, this);
     }
@@ -43,7 +41,12 @@ public partial class Tile : Node2D
 		{
 			if (mouseEvent.ButtonIndex == MouseButton.Left)
 			{
-                GD.Print(GridPosition);
+				var hasAgent = GridManager.Instance.CheckTileHasAgent(GridPosition);
+				if (hasAgent)
+				{
+					return;
+				}
+				InputManager.Instance.TileSelected(Highlighted, this);
             }
 			else if (mouseEvent.ButtonIndex == MouseButton.Right && Highlighted)
 			{
