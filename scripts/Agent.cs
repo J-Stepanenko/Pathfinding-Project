@@ -67,9 +67,15 @@ public partial class Agent : Node2D
 
     public void MoveAgent(Vector2I gridPos)
     {
+        // Remove old position from grid manager
+        var oldPos = Utilities.GetGridPosFromVector(this.Position);
+        GridManager.Instance.DeregisterAgent(oldPos);
+
+        // Move agent and add new position to grid manager
         GD.Print(gridPos);
         this.Position = Utilities.GetRealCoordinatesFromGridPos(gridPos);
         CanMove = false;
+        GridManager.Instance.RegisterAgent(gridPos, this);
     }
 
     private void OnTurnEnd()
