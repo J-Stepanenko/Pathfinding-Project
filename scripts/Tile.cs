@@ -10,14 +10,14 @@ public partial class Tile : Node2D
 
 	public Vector2I GridPosition;
 	public bool Highlighted = false;
-	public bool CanPass;
+	public bool CanPassThisTurn;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		var meshInstance = this.GetChild<MeshInstance2D>(0);
         area = meshInstance.GetChild<Area2D>(0);
 		area.InputEvent += _on_mouse_press;
-		CanPass = IsWalkable;
+		CanPassThisTurn = IsWalkable;
 
 		GridPosition = Utilities.GetGridPosFromNode(this);
 
@@ -34,16 +34,16 @@ public partial class Tile : Node2D
             var agent = GridManager.Instance.GetAgent(GridPosition);
             if (agent.Team != TurnManager.Instance.TeamTurn)
             {
-                CanPass = false;
+                CanPassThisTurn = false;
             }
             else
             {
-                CanPass = IsWalkable;
+                CanPassThisTurn = IsWalkable;
             }
         }
         else
         {
-            CanPass = IsWalkable;
+            CanPassThisTurn = IsWalkable;
         }
     }
 
@@ -66,6 +66,7 @@ public partial class Tile : Node2D
 		{
 			if (mouseEvent.ButtonIndex == MouseButton.Left)
 			{
+				GD.Print(GridPosition);
 				var hasAgent = GridManager.Instance.CheckTileHasAgent(GridPosition);
 				if (hasAgent)
 				{
@@ -87,20 +88,20 @@ public partial class Tile : Node2D
 			var agent = GridManager.Instance.GetAgent(GridPosition);
 			if (agent.Team != TurnManager.Instance.TeamTurn)
 			{
-				CanPass = false;
+				CanPassThisTurn = false;
 			}
 			else
 			{
-                CanPass = IsWalkable;
+                CanPassThisTurn = IsWalkable;
 			}
 		}
 		else
 		{
-            CanPass = IsWalkable;
+            CanPassThisTurn = IsWalkable;
 		}
 		if (IsWalkable)
 		{
-			GridManager.Instance.SetTileOccupied(GridPosition, !CanPass);
+			GridManager.Instance.SetTileOccupied(GridPosition, !CanPassThisTurn);
 		}
 	}
 

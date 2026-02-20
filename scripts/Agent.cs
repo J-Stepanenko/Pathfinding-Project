@@ -8,6 +8,7 @@ public partial class Agent : Node2D
 
     [Export] public int MoveRange;
     [Export] public int Team;
+    [Export] public bool AIEnabled;
     public Vector2I GridPosition;
     public bool CanMove;
 
@@ -24,6 +25,7 @@ public partial class Agent : Node2D
 
         GridManager.Instance.RegisterAgent(GridPosition, this);
 
+        TurnManager.Instance.DoAITurn += DoAITurn;
         TurnManager.Instance.TurnEnded += OnTurnEnd;
     }
 
@@ -67,15 +69,38 @@ public partial class Agent : Node2D
 
     public void MoveAgent(Vector2I gridPos)
     {
+        GridPosition = gridPos;
         // Remove old position from grid manager
         var oldPos = Utilities.GetGridPosFromVector(this.Position);
         GridManager.Instance.DeregisterAgent(oldPos);
 
         // Move agent and add new position to grid manager
-        GD.Print(gridPos);
         this.Position = Utilities.GetRealCoordinatesFromGridPos(gridPos);
         CanMove = false;
         GridManager.Instance.RegisterAgent(gridPos, this);
+    }
+
+    private void DoAITurn()
+    {
+        if (AIEnabled)
+        {
+            if (CanMove && TurnManager.Instance.TeamTurn == this.Team)
+            {
+                var bestTile = TileScorer.FindBestTile(this, AgentStateMachine.AgentStates.Attacking);
+                var path = GridManager.Instance.GetPath(this.GridPosition, bestTile.GridPosition);
+                var reachableTiles = GridManager.Instance.GetReachableTiles(this.GridPosition, MoveRange);
+                var nearestTileToBest = bestTile;
+                for (int i = 0; i < path.Count - 1; i++)
+                {
+                    if (!reachableTiles.Contains(
+                        GridManager.Instance.GetTile(path[i + 1])))
+                    {
+                        nearestTileToBest = GridManager.Instance.GetTile(path[i]);
+                    }
+                }
+                MoveAgent(nearestTileToBest.GridPosition);
+            }
+        }
     }
 
     private void OnTurnEnd()

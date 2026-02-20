@@ -24,6 +24,7 @@ public partial class TurnManager : Node
 
     public void EndTurn()
     {
+        EmitSignal(SignalName.DoAITurn);
         if (TeamTurn+1 > 2)
         {
             TeamTurn = 1;
@@ -40,4 +41,7 @@ public partial class TurnManager : Node
 
     [Signal]
     public delegate void TurnEndedEventHandler();
+
+    [Signal]
+    public delegate void DoAITurnEventHandler();
 }

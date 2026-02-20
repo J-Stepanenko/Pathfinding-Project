@@ -1,12 +1,13 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class GridManager : Node
 {
 	public static GridManager Instance { get; private set; }
 
-	private Dictionary<Vector2I, Tile> tiles = new();
+	public Dictionary<Vector2I, Tile> tiles = new();
 	private Dictionary<Vector2I, Agent> agents = new();
 	private Agent selectedAgent;
     private AStar2D astar = new AStar2D();
@@ -93,7 +94,7 @@ public partial class GridManager : Node
                 if (!tiles.ContainsKey(neighbor)) continue;
 
                 var tile = GetTile(neighbor);
-                if (!tile.CanPass) continue;
+                if (!tile.CanPassThisTurn) continue;
 
                 int newCost = currentCost + tile.MoveCost;
 
@@ -110,6 +111,30 @@ public partial class GridManager : Node
         }
 
         return reachable;
+    }
+
+    public Tile FindClosestTile(Dictionary<Vector2I, Tile> tiles, Vector2I start)
+    {
+        if (tiles.Count == 1)
+        {
+            return tiles.First().Value;
+        }
+        List<List<Vector2I>> paths = new List<List<Vector2I>>();
+        foreach(var tile in tiles)
+        {
+            paths.Add(GetPath(start, tile.Value.GridPosition));
+        }
+        var shortestPathLength = -1;
+        Tile closestTile = null;
+        foreach (var path in paths)
+        {
+            if (path.Count < shortestPathLength || shortestPathLength == -1)
+            {
+                shortestPathLength = path.Count;
+                closestTile = GetTile(path.Last());
+            }
+        }
+        return closestTile;
     }
 
     public void HighlightTiles(List<Tile> tiles, bool highlight)
@@ -147,7 +172,7 @@ public partial class GridManager : Node
                 if (!astar.ArePointsConnected(idA, idB))
                     astar.ConnectPoints(idA, idB);
 
-                if (!tile.CanPass)
+                if (!tile.CanPassThisTurn)
                 {
                     astar.SetPointDisabled(idA, true);
                 }

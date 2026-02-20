@@ -271,12 +271,12 @@ IsWalkable = true
 
 [node name="Agent" parent="Characters" instance=ExtResource("2_3253y")]
 position = Vector2(350, 150)
-MoveRange = 50
 Team = 1
 
 [node name="Agent2" parent="Characters" instance=ExtResource("2_3253y")]
 position = Vector2(750, 150)
 Team = 2
+AIEnabled = true
 
 [node name="UI" type="Node" parent="."]
 script = ExtResource("3_3253y")

@@ -18,5 +18,4 @@ mesh = SubResource("QuadMesh_nxogm")
 scale = Vector2(100, 100)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MeshInstance2D/Area2D"]
-scale = Vector2(1.0000001, 1.0000001)
 shape = SubResource("RectangleShape2D_3253y")
