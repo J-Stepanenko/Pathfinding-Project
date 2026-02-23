@@ -8,15 +8,16 @@ public static class TileScorer
 {
     public static Tile FindBestTile(Agent agent, AgentStates state)
     {
-        var tiles = GridManager.Instance.tiles;
+        var tiles = GridManager.Instance.Tiles;
         Dictionary<Vector2I, Tile> bestTiles = new Dictionary<Vector2I, Tile>();
         var bestScore = 0;
         switch (state)
         {
             case (AgentStates.Attacking):
+                var targetPos = FindAttackTarget(agent).GridPosition;
                 foreach (var tile in tiles)
                 {
-                    var score = ScoreTileAttacking(tile.Key, agent, tiles);
+                    var score = ScoreTileAttacking(tile.Value, agent, targetPos);
                     if (score > bestScore)
                     {
                         bestScore = score;
@@ -35,9 +36,33 @@ public static class TileScorer
 
     }
 
-    private static int ScoreTileAttacking(Vector2I tilePos, Agent agent, Dictionary<Vector2I, Tile> tiles)
+    private static Agent FindAttackTarget(Agent agent)
     {
-        if (!GridManager.Instance.GetTile(tilePos)
+        var tiles = GridManager.Instance.Tiles;
+        var agents = GridManager.Instance.Agents;
+        var lowestCost = -1;
+        Agent target = null;
+        foreach (var possibleTarget in agents)
+        {
+            if (possibleTarget.Value.Team == TurnManager.Instance.TeamTurn)
+            {
+                continue;
+            }
+            GridManager.Instance.GetPath(agent.GridPosition, possibleTarget.Value.GridPosition, out var cost);
+            if (lowestCost == -1 || cost < lowestCost)
+            {
+                lowestCost = cost;
+                target = possibleTarget.Value;
+            }
+        }
+        GD.Print("Agent at " + agent.GridPosition + " targetting " + target.GridPosition+" cost: "+lowestCost);
+        return target;
+    }
+
+    private static int ScoreTileAttacking(Tile tile, Agent agent, Vector2I targetPos)
+    {
+        var tiles = GridManager.Instance.Tiles;
+        if (!tile
             .CanPassThisTurn)
         {
             return 0;
@@ -53,14 +78,14 @@ public static class TileScorer
 
         foreach (var dir in directions)
         {
-            var neighborPos = tilePos + dir;
+            var neighbourPos = tile.GridPosition + dir;
 
-            if (!tiles.ContainsKey(neighborPos)) continue;
+            if (!tiles.ContainsKey(neighbourPos)) continue;
 
-            tiles.TryGetValue(neighborPos, out Tile neighbour);
-            if (GridManager.Instance.CheckTileHasAgent(neighborPos))
+            tiles.TryGetValue(neighbourPos, out Tile neighbour);
+            if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
             {
-                var neighbourAgent = GridManager.Instance.GetAgent(neighborPos);
+                var neighbourAgent = GridManager.Instance.GetAgent(neighbourPos);
                 if (neighbourAgent.Team != agent.Team)
                 {
                     enemies++;
@@ -84,6 +109,10 @@ public static class TileScorer
             {
                 score++;
             }
+        }
+        if (score < 0)
+        {
+            score = 0;
         }
         return score;
     }

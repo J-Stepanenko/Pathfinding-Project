@@ -21,6 +21,11 @@ GridManager="*res://scripts/GridManager.cs"
 InputManager="*res://scripts/InputManager.cs"
 TurnManager="*res://scripts/TurnManager.cs"
 
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+
 [dotnet]
 
 project/assembly_name="Thesis"

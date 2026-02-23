@@ -269,6 +269,15 @@ position = Vector2(150, 550)
 Team = 1
 
 [node name="Agent2" parent="Characters" instance=ExtResource("6_nfx0i")]
-position = Vector2(950, 150)
+position = Vector2(950, 550)
+Team = 2
+AIEnabled = true
+
+[node name="Agent3" parent="Characters" instance=ExtResource("6_nfx0i")]
+position = Vector2(150, 150.00003)
+Team = 1
+
+[node name="Agent4" parent="Characters" instance=ExtResource("6_nfx0i")]
+position = Vector2(950, 150.00003)
 Team = 2
 AIEnabled = true

@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class Agent : Node2D
 {
@@ -87,19 +88,22 @@ public partial class Agent : Node2D
             if (CanMove && TurnManager.Instance.TeamTurn == this.Team)
             {
                 var bestTile = TileScorer.FindBestTile(this, AgentStateMachine.AgentStates.Attacking);
-                var path = GridManager.Instance.GetPath(this.GridPosition, bestTile.GridPosition);
-                var reachableTiles = GridManager.Instance.GetReachableTiles(this.GridPosition, MoveRange);
-                var nearestTileToBest = bestTile;
-                for (int i = 0; i < path.Count - 1; i++)
-                {
-                    if (!reachableTiles.Contains(
-                        GridManager.Instance.GetTile(path[i + 1])))
-                    {
-                        nearestTileToBest = GridManager.Instance.GetTile(path[i]);
-                        break;
-                    }
-                }
-                MoveAgent(nearestTileToBest.GridPosition);
+                var path = GridManager.Instance.GetPath(this.GridPosition, bestTile.GridPosition, MoveRange);
+                //var reachableTiles = GridManager.Instance.GetReachableTiles(this.GridPosition, MoveRange);
+                //var nearestTileToBest = bestTile;
+                //if (!reachableTiles.Contains(bestTile))
+                //{
+                //    for (int i = 0; i < path.Count - 2; i++)
+                //    {
+                //        if (!reachableTiles.Contains(
+                //            GridManager.Instance.GetTile(path[i + 1])))
+                //        {
+                //            nearestTileToBest = GridManager.Instance.GetTile(path[i]);
+                //            break;
+                //        }
+                //    }
+                //}
+                MoveAgent(path.Last());
             }
         }
     }

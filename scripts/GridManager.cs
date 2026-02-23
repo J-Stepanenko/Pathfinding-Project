@@ -1,14 +1,15 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 public partial class GridManager : Node
 {
 	public static GridManager Instance { get; private set; }
 
-	public Dictionary<Vector2I, Tile> tiles = new();
-	private Dictionary<Vector2I, Agent> agents = new();
+	public Dictionary<Vector2I, Tile> Tiles = new();
+	public Dictionary<Vector2I, Agent> Agents = new();
 	private Agent selectedAgent;
     private AStar2D astar = new AStar2D();
     // Called when the node enters the scene tree for the first time.
@@ -29,7 +30,7 @@ public partial class GridManager : Node
 
     private void InitGrid()
     {
-        foreach (Tile tile in tiles.Values)
+        foreach (Tile tile in Tiles.Values)
         {
             tile.Init();
         }
@@ -37,33 +38,33 @@ public partial class GridManager : Node
 
 	public void RegisterTile(Vector2I gridPos, Tile tile)
 	{
-		tiles[gridPos] = tile;
+		Tiles[gridPos] = tile;
 	}
 
 	public void RegisterAgent(Vector2I agentPos, Agent agent)
 	{
-		agents[agentPos] = agent;
+		Agents[agentPos] = agent;
 	}
 
 	public bool DeregisterAgent(Vector2I agentPos)
 	{
-		return agents.Remove(agentPos);
+		return Agents.Remove(agentPos);
 	}
 
 	public Tile GetTile(Vector2I gridPos)
 	{
-		return tiles.TryGetValue(gridPos, out Tile tile) ? tile : null;
+		return Tiles.TryGetValue(gridPos, out Tile tile) ? tile : null;
 	}
 
 	public Agent GetAgent(Vector2I agentPos)
 	{
-		return agents.TryGetValue(agentPos, out Agent agent) ? agent : null;
+		return Agents.TryGetValue(agentPos, out Agent agent) ? agent : null;
 	}
 
 	public bool CheckTileHasAgent(Vector2I gridPos)
 	{
-		if (!tiles.ContainsKey(gridPos)) return false;
-		return agents.ContainsKey(gridPos);
+		if (!Tiles.ContainsKey(gridPos)) return false;
+		return Agents.ContainsKey(gridPos);
 	}
 
 	// Djikstra's algorithm
@@ -91,7 +92,7 @@ public partial class GridManager : Node
             {
                 var neighbor = current + dir;
 
-                if (!tiles.ContainsKey(neighbor)) continue;
+                if (!Tiles.ContainsKey(neighbor)) continue;
 
                 var tile = GetTile(neighbor);
                 if (!tile.CanPassThisTurn) continue;
@@ -115,6 +116,10 @@ public partial class GridManager : Node
 
     public Tile FindClosestTile(Dictionary<Vector2I, Tile> tiles, Vector2I start)
     {
+        if (tiles.ContainsKey(start))
+        {
+            return tiles[start];
+        }
         if (tiles.Count == 1)
         {
             return tiles.First().Value;
@@ -122,7 +127,7 @@ public partial class GridManager : Node
         List<List<Vector2I>> paths = new List<List<Vector2I>>();
         foreach(var tile in tiles)
         {
-            paths.Add(GetPath(start, tile.Value.GridPosition));
+            paths.Add(GetPath(start, tile.Key));
         }
         var shortestPathLength = -1;
         Tile closestTile = null;
@@ -147,7 +152,7 @@ public partial class GridManager : Node
     public void BuildAStar()
     {
         // Add all tiles as points
-        foreach (var (gridPos, tile) in tiles)
+        foreach (var (gridPos, tile) in Tiles)
         {
             long id = GetIdFromGridPos(gridPos);
             astar.AddPoint(id, (Vector2)gridPos, tile.MoveCost);
@@ -158,13 +163,13 @@ public partial class GridManager : Node
             Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
         };
 
-        foreach (var (gridPos, tile) in tiles)
+        foreach (var (gridPos, tile) in Tiles)
         {
             foreach (var dir in directions)
             {
                 var neighbour = gridPos + dir;
-                if (!tiles.ContainsKey(neighbour)) continue;
-                if (!tiles[neighbour].IsWalkable) continue;
+                if (!Tiles.ContainsKey(neighbour)) continue;
+                if (!Tiles[neighbour].IsWalkable) continue;
 
                 long idA = GetIdFromGridPos(gridPos);
                 long idB = GetIdFromGridPos(neighbour);
@@ -179,23 +184,78 @@ public partial class GridManager : Node
             }
         }
     }
+
+    /// <summary>
+    /// Return the path to a tile
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <returns></returns>
     public List<Vector2I> GetPath(Vector2I from, Vector2I to)
+    {
+        return GetPath(from, to, out _);
+    }
+    /// <summary>
+    /// Return the path to a tile, cutting off after the path's cost exceeds the moveRange
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="moveRange"></param>
+    /// <returns></returns>
+    public List<Vector2I> GetPath(Vector2I from, Vector2I to, int moveRange)
     {
         long idFrom = GetIdFromGridPos(from);
         long idTo = GetIdFromGridPos(to);
+        var cost = 0;
+        var path = astar.GetPointPath(idFrom, idTo);
+
+        var gridPath = new List<Vector2I>();
+
+        GD.Print("path:");
+        foreach (var point in path)
+        {
+            if ((Vector2I)point != from)
+            {
+                if (cost + GetTile((Vector2I)point).MoveCost > moveRange) break;
+                else
+                {
+                    gridPath.Add((Vector2I)point);
+                    cost += GetTile((Vector2I)point).MoveCost;
+                }
+            }
+            GD.Print(point + " " + cost);
+        }
+        return gridPath;
+    }
+    /// <summary>
+    /// Return the path to a tile
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="cost"></param>
+    /// <returns></returns>
+    public List<Vector2I> GetPath(Vector2I from, Vector2I to, out int cost)
+    {
+        GD.Print(from + " " + to);
+        long idFrom = GetIdFromGridPos(from);
+        long idTo = GetIdFromGridPos(to);
+        cost = 0;
 
         var path = astar.GetPointPath(idFrom, idTo);
 
         var gridPath = new List<Vector2I>();
-        foreach (var point in path)
-            gridPath.Add((Vector2I)point);
 
         GD.Print("path:");
-        foreach(var point in path)
+        foreach (var point in path)
         {
-            GD.Print(point);
+            gridPath.Add((Vector2I)point);
+            if ((Vector2I)point != from)
+            {
+                cost += GetTile((Vector2I)point)
+                    .MoveCost;
+            }
+            GD.Print(point + " " + cost);
         }
-
         return gridPath;
     }
 

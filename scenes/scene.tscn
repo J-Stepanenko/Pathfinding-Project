@@ -5,7 +5,7 @@
 
 [node name="Scene" type="Node2D"]
 
-[node name="Grid" parent="." instance=ExtResource("1_1kc1q")]
+[node name="Map" parent="." instance=ExtResource("1_1kc1q")]
 
 [node name="UI" type="Node" parent="."]
 script = ExtResource("4_ruw3y")
