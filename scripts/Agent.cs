@@ -96,6 +96,7 @@ public partial class Agent : Node2D
                         GridManager.Instance.GetTile(path[i + 1])))
                     {
                         nearestTileToBest = GridManager.Instance.GetTile(path[i]);
+                        break;
                     }
                 }
                 MoveAgent(nearestTileToBest.GridPosition);

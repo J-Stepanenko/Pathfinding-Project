@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://6bdbj5tho366"]
+
+[ext_resource type="PackedScene" uid="uid://ce2oqp1oeti70" path="res://scenes/tiles/basic_tile.tscn" id="1_6e0mi"]
+
+[node name="Impassable_Tile" instance=ExtResource("1_6e0mi")]
+IsWalkable = false
+
+[node name="MeshInstance2D" parent="." index="0"]
+modulate = Color(0, 0, 0, 1)

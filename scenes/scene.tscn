@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4peo0ywrglr1"]
+
+[ext_resource type="PackedScene" uid="uid://c20tu1t3py1rv" path="res://scenes/map_1.tscn" id="1_1kc1q"]
+[ext_resource type="Script" uid="uid://cdmgrhfl64sa0" path="res://scripts/UI.cs" id="4_ruw3y"]
+
+[node name="Scene" type="Node2D"]
+
+[node name="Grid" parent="." instance=ExtResource("1_1kc1q")]
+
+[node name="UI" type="Node" parent="."]
+script = ExtResource("4_ruw3y")
+
+[node name="End Turn Button" type="Button" parent="UI"]
+offset_right = 78.0
+offset_bottom = 31.0
+text = "End Turn"

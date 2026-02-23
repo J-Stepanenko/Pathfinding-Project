@@ -11,6 +11,8 @@ public partial class Tile : Node2D
 	public Vector2I GridPosition;
 	public bool Highlighted = false;
 	public bool CanPassThisTurn;
+
+	private Color defaultColor;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -18,8 +20,9 @@ public partial class Tile : Node2D
         area = meshInstance.GetChild<Area2D>(0);
 		area.InputEvent += _on_mouse_press;
 		CanPassThisTurn = IsWalkable;
+		defaultColor = meshInstance.Modulate;
 
-		GridPosition = Utilities.GetGridPosFromNode(this);
+        GridPosition = Utilities.GetGridPosFromNode(this);
 
         GridManager.Instance.RegisterTile(GridPosition, this);
         TurnManager.Instance.TurnEnded += OnTurnEnd;
@@ -57,7 +60,7 @@ public partial class Tile : Node2D
 	{
 		this.Highlighted = highlighted;
 		var mesh = this.GetChild<MeshInstance2D>(0);
-		mesh.SelfModulate = highlighted ? Colors.Green : Colors.White;
+		mesh.Modulate = highlighted ? Colors.Green : defaultColor;
     }
 
 	public void _on_mouse_press(Node viewport, InputEvent @event, long shapeIdx) 
@@ -83,6 +86,7 @@ public partial class Tile : Node2D
 
 	private void OnTurnEnd()
 	{
+		SetHighlight(false);
 		if (GridManager.Instance.CheckTileHasAgent(GridPosition))
 		{
 			var agent = GridManager.Instance.GetAgent(GridPosition);
@@ -108,6 +112,6 @@ public partial class Tile : Node2D
 	public void ShowPath()
 	{
 		var mesh = this.GetChild<MeshInstance2D>(0);
-		mesh.SelfModulate = Colors.Blue;
+		mesh.Modulate = Colors.Blue;
 	}
 }
