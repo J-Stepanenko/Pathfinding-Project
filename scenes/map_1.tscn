@@ -281,3 +281,8 @@ Team = 1
 position = Vector2(950, 150.00003)
 Team = 2
 AIEnabled = true
+
+[node name="Agent5" parent="Characters" instance=ExtResource("6_nfx0i")]
+position = Vector2(950, 50.000008)
+Team = 2
+AIEnabled = true

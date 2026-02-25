@@ -89,6 +89,10 @@ public partial class Agent : Node2D
             {
                 var bestTile = TileScorer.FindBestTile(this, AgentStateMachine.AgentStates.Attacking);
                 var path = GridManager.Instance.GetPath(this.GridPosition, bestTile.GridPosition, MoveRange);
+                if (path.Count == 0)
+                {
+                    return;
+                }
                 //var reachableTiles = GridManager.Instance.GetReachableTiles(this.GridPosition, MoveRange);
                 //var nearestTileToBest = bestTile;
                 //if (!reachableTiles.Contains(bestTile))

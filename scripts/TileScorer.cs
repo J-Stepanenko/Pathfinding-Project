@@ -42,20 +42,28 @@ public static class TileScorer
         var agents = GridManager.Instance.Agents;
         var lowestCost = -1;
         Agent target = null;
+        Vector2I[] directions =
+        {
+            Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
+        };
         foreach (var possibleTarget in agents)
         {
             if (possibleTarget.Value.Team == TurnManager.Instance.TeamTurn)
             {
                 continue;
             }
-            GridManager.Instance.GetPath(agent.GridPosition, possibleTarget.Value.GridPosition, out var cost);
-            if (lowestCost == -1 || cost < lowestCost)
+            foreach (var dir in directions)
             {
-                lowestCost = cost;
-                target = possibleTarget.Value;
+                // Get neighbours as tile with agent is disabled in A*
+                GridManager.Instance.GetPath(agent.GridPosition, possibleTarget.Value.GridPosition + dir, out var cost);
+                if (lowestCost == -1 || cost < lowestCost)
+                {
+                    lowestCost = cost;
+                    target = possibleTarget.Value;
+                }
             }
         }
-        GD.Print("Agent at " + agent.GridPosition + " targetting " + target.GridPosition+" cost: "+lowestCost);
+        GD.Print("Agent:" + agent.Name + " targetting " + target.GridPosition+" cost: "+lowestCost);
         return target;
     }
 
@@ -86,6 +94,10 @@ public static class TileScorer
             if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
             {
                 var neighbourAgent = GridManager.Instance.GetAgent(neighbourPos);
+                if (neighbourPos == targetPos)
+                {
+                    score += 2;
+                }
                 if (neighbourAgent.Team != agent.Team)
                 {
                     enemies++;
@@ -113,6 +125,10 @@ public static class TileScorer
         if (score < 0)
         {
             score = 0;
+        }
+        if (score > 0)
+        {
+            GD.Print("Agent: " + agent.Name + " score for tile: " + tile.GridPosition + " is: " + score);
         }
         return score;
     }

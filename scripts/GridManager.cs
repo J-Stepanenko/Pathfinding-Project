@@ -211,7 +211,6 @@ public partial class GridManager : Node
 
         var gridPath = new List<Vector2I>();
 
-        GD.Print("path:");
         foreach (var point in path)
         {
             if ((Vector2I)point != from)
@@ -223,12 +222,11 @@ public partial class GridManager : Node
                     cost += GetTile((Vector2I)point).MoveCost;
                 }
             }
-            GD.Print(point + " " + cost);
         }
         return gridPath;
     }
     /// <summary>
-    /// Return the path to a tile
+    /// Return the path to a tile, and the cost to travel that path
     /// </summary>
     /// <param name="from"></param>
     /// <param name="to"></param>
@@ -236,7 +234,6 @@ public partial class GridManager : Node
     /// <returns></returns>
     public List<Vector2I> GetPath(Vector2I from, Vector2I to, out int cost)
     {
-        GD.Print(from + " " + to);
         long idFrom = GetIdFromGridPos(from);
         long idTo = GetIdFromGridPos(to);
         cost = 0;
@@ -245,7 +242,6 @@ public partial class GridManager : Node
 
         var gridPath = new List<Vector2I>();
 
-        GD.Print("path:");
         foreach (var point in path)
         {
             gridPath.Add((Vector2I)point);
@@ -254,7 +250,6 @@ public partial class GridManager : Node
                 cost += GetTile((Vector2I)point)
                     .MoveCost;
             }
-            GD.Print(point + " " + cost);
         }
         return gridPath;
     }
