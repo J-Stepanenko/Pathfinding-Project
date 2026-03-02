@@ -1,12 +1,20 @@
 using Godot;
 using System;
 
+public enum TileTerrain
+{
+	Plains,
+	Forest,
+	Mountain,
+	River
+}
 public partial class Tile : Node2D
 {
 	private Area2D area;
 
 	[Export] public int MoveCost = 1;
 	[Export] public bool IsWalkable = true;
+	[Export] public TileTerrain Terrain;
 
 	public Vector2I GridPosition;
 	public bool Highlighted = false;
@@ -17,12 +25,14 @@ public partial class Tile : Node2D
 	public override void _Ready()
 	{
 		var meshInstance = this.GetChild<MeshInstance2D>(0);
+        var label = this.GetChild<Label>(1);
         area = meshInstance.GetChild<Area2D>(0);
 		area.InputEvent += _on_mouse_press;
 		CanPassThisTurn = IsWalkable;
 		defaultColor = meshInstance.Modulate;
 
         GridPosition = Utilities.GetGridPosFromNode(this);
+        label.Text = GridPosition.ToString();
 
         GridManager.Instance.RegisterTile(GridPosition, this);
         TurnManager.Instance.TurnEnded += OnTurnEnd;

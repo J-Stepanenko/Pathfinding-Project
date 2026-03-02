@@ -21,6 +21,7 @@ GridManager="*res://scripts/GridManager.cs"
 InputManager="*res://scripts/InputManager.cs"
 TurnManager="*res://scripts/TurnManager.cs"
 AgentStateMachine="*res://scripts/AgentStateManager.cs"
+CombatManager="*res://scripts/CombatManager.cs"
 
 [display]
 

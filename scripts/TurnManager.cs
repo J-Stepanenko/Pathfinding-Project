@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class TurnManager : Node
 {
@@ -24,7 +25,17 @@ public partial class TurnManager : Node
 
     public void EndTurn()
     {
-        EmitSignal(SignalName.DoAITurn);
+    //  EmitSignal(SignalName.DoAITurn);
+        var agentsDict = GridManager.Instance.Agents;
+        var agentsValues = new List<Agent>();
+        foreach (var agent in agentsDict)
+        {
+            agentsValues.Add(agent.Value);
+        }
+        foreach(var agent in agentsValues)
+        {
+            agent.DoAITurn();
+        }
         if (TeamTurn+1 > 2)
         {
             TeamTurn = 1;

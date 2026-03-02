@@ -34,6 +34,11 @@ public partial class GridManager : Node
         {
             tile.Init();
         }
+        foreach (Agent agent in Agents.Values)
+        {
+            agent.Init();
+            GD.Print("Initialised " + agent.Name+" at: "+agent.GridPosition);
+        }
     }
 
 	public void RegisterTile(Vector2I gridPos, Tile tile)
@@ -70,7 +75,7 @@ public partial class GridManager : Node
 	// Djikstra's algorithm
     public List<Tile> GetReachableTiles(Vector2I start, int moveRange)
     {
-        var reachable = new List<Tile>();
+        var reachable = new Dictionary<Vector2I,Tile>();
         var costSoFar = new Dictionary<Vector2I, int>();
         // priority queue: (cost, position)
         var queue = new PriorityQueue<Vector2I, int>();
@@ -106,12 +111,26 @@ public partial class GridManager : Node
                 {
                     costSoFar[neighbor] = newCost;
                     queue.Enqueue(neighbor, newCost);
-                    reachable.Add(tile);
+                    reachable.Add(tile.GridPosition, tile);
                 }
             }
         }
 
-        return reachable;
+        foreach (var agent in Agents)
+        {
+            if (reachable.ContainsKey(agent.Key))
+            {
+                reachable.Remove(agent.Key);
+            }
+        }
+
+        var returnedList = new List<Tile>();
+        foreach (var tile in reachable)
+        {
+            returnedList.Add(tile.Value);
+        }
+
+        return returnedList;
     }
 
     public Tile FindClosestTile(Dictionary<Vector2I, Tile> tiles, Vector2I start)
@@ -138,6 +157,14 @@ public partial class GridManager : Node
                 shortestPathLength = path.Count;
                 closestTile = GetTile(path.Last());
             }
+        }
+        // Needs more testing
+        if (CheckTileHasAgent(closestTile.GridPosition))
+        {
+            var id = GetIdFromGridPos(closestTile.GridPosition);
+            astar.SetPointDisabled(id, true);
+            closestTile = FindClosestTile(tiles, start);
+            astar.SetPointDisabled(id, false);
         }
         return closestTile;
     }

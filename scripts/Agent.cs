@@ -23,6 +23,8 @@ public partial class Agent : Node2D
         CanMove = true;
         InFormation = false;
         var meshInstance = this.GetChild<MeshInstance2D>(0);
+        var label = this.GetChild<Label>(1);
+        label.Text = Name + "\n" + Team;
         area = meshInstance.GetChild<Area2D>(0);
         area.InputEvent += _on_mouse_press;
 
@@ -32,6 +34,27 @@ public partial class Agent : Node2D
 
         TurnManager.Instance.DoAITurn += DoAITurn;
         TurnManager.Instance.TurnEnded += OnTurnEnd;
+    }
+
+    public void Init()
+    {
+        Vector2I[] directions =
+        {
+            Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
+        };
+
+        foreach (var dir in directions)
+        {
+            var neighbourPos = GridPosition + dir;
+            if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
+            {
+                var agent = GridManager.Instance.GetAgent(neighbourPos);
+                if (agent.Team == Team)
+                {
+                    InFormation = true;
+                }
+            }
+        }
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -74,6 +97,7 @@ public partial class Agent : Node2D
 
     public void MoveAgent(Vector2I gridPos)
     {
+        GD.Print(Name + " moving from " + GridPosition + " to " + gridPos);
         GridPosition = gridPos;
         // Remove old position from grid manager
         var oldPos = Utilities.GetGridPosFromVector(this.Position);
@@ -85,33 +109,50 @@ public partial class Agent : Node2D
         GridManager.Instance.RegisterAgent(gridPos, this);
     }
 
-    private void DoAITurn()
+    public void DoAITurn()
     {
         if (AIEnabled)
         {
             if (CanMove && TurnManager.Instance.TeamTurn == this.Team)
             {
                 State = AgentStateManager.Instance.CalculateState(this);
+                GD.Print("Agent: " + Name + " is in state: " + State + " at position: " + GridPosition);
                 var bestTile = TileScorer.FindBestTile(this, State);
                 var path = GridManager.Instance.GetPath(this.GridPosition, bestTile.GridPosition, MoveRange);
+                if (State == AgentState.Forming_up)
+                {
+                    InFormation = true;
+                }
+                else
+                {
+                    InFormation = false;
+                    var tiles = GridManager.Instance.Tiles;
+                    Vector2I[] directions =
+                    {
+                        Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
+                    };
+                    foreach (var dir in directions)
+                    {
+                        var neighbourPos = GridPosition + dir;
+
+                        if (!tiles.ContainsKey(neighbourPos)) continue;
+
+                        tiles.TryGetValue(neighbourPos, out Tile neighbour);
+
+                        if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
+                        {
+                            var neighbourAgent = GridManager.Instance.GetAgent(neighbourPos);
+                            if (neighbourAgent.Team  == this.Team)
+                            {
+                                InFormation = true;
+                            }
+                        }
+                    }
+                }
                 if (path.Count == 0)
                 {
                     return;
                 }
-                //var reachableTiles = GridManager.Instance.GetReachableTiles(this.GridPosition, MoveRange);
-                //var nearestTileToBest = bestTile;
-                //if (!reachableTiles.Contains(bestTile))
-                //{
-                //    for (int i = 0; i < path.Count - 2; i++)
-                //    {
-                //        if (!reachableTiles.Contains(
-                //            GridManager.Instance.GetTile(path[i + 1])))
-                //        {
-                //            nearestTileToBest = GridManager.Instance.GetTile(path[i]);
-                //            break;
-                //        }
-                //    }
-                //}
                 MoveAgent(path.Last());
             }
         }

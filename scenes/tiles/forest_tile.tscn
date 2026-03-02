@@ -11,6 +11,7 @@ size = Vector2(0.9999999, 0.9999999)
 [node name="Forest_Tile" type="Node2D"]
 script = ExtResource("1_0b56j")
 MoveCost = 2
+Terrain = 1
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 modulate = Color(0, 0.46288538, 1.0588765e-06, 1)
@@ -22,3 +23,12 @@ scale = Vector2(100, 100)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MeshInstance2D/Area2D"]
 visible = false
 shape = SubResource("RectangleShape2D_3253y")
+
+[node name="Label" type="Label" parent="."]
+modulate = Color(0, 0, 0, 1)
+z_index = 1
+offset_left = -50.0
+offset_top = -46.25
+offset_right = 48.749992
+offset_bottom = 46.249992
+clip_text = true

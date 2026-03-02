@@ -14,6 +14,7 @@ MoveRange = 4
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 modulate = Color(0.53885245, 0.050833814, 0.095078595, 1)
+scale = Vector2(0.99999994, 0.99999994)
 mesh = SubResource("QuadMesh_3253y")
 
 [node name="Area2D" type="Area2D" parent="MeshInstance2D"]
@@ -22,3 +23,11 @@ scale = Vector2(5, 5)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MeshInstance2D/Area2D"]
 visible = false
 shape = SubResource("RectangleShape2D_nxogm")
+
+[node name="Label" type="Label" parent="."]
+z_index = 1
+offset_left = -50.0
+offset_top = -46.25
+offset_right = 48.749992
+offset_bottom = 46.249992
+clip_text = true

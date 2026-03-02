@@ -1,0 +1,288 @@
+[gd_scene load_steps=6 format=3 uid="uid://b3ruiy8carnoh"]
+
+[ext_resource type="PackedScene" uid="uid://ce2oqp1oeti70" path="res://scenes/tiles/basic_tile.tscn" id="1_awe8u"]
+[ext_resource type="PackedScene" uid="uid://3angrksctdgc" path="res://scenes/agent.tscn" id="2_jsn8n"]
+[ext_resource type="PackedScene" uid="uid://73l2j65eyfp2" path="res://scenes/tiles/river_tile.tscn" id="2_s43yw"]
+[ext_resource type="PackedScene" uid="uid://b6hq8viqx6ytt" path="res://scenes/tiles/mountain_tile.tscn" id="3_ryx0p"]
+[ext_resource type="PackedScene" uid="uid://c7whgch1att3u" path="res://scenes/tiles/forest_tile.tscn" id="5_vtpsr"]
+
+[node name="Map" type="Node2D"]
+
+[node name="Tiles" type="Node" parent="."]
+
+[node name="Basic_Tile" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(50, 50)
+
+[node name="Basic_Tile2" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(150, 50)
+
+[node name="Basic_Tile3" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(50, 150)
+
+[node name="Basic_Tile4" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(150, 150)
+
+[node name="Basic_Tile5" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(250, 150)
+
+[node name="Basic_Tile9" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(250, 450)
+
+[node name="Basic_Tile10" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(150, 450)
+
+[node name="Basic_Tile11" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(50, 450)
+
+[node name="Basic_Tile12" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(350, 550)
+
+[node name="Basic_Tile13" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(250, 550)
+
+[node name="Basic_Tile14" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(150, 550)
+
+[node name="Basic_Tile15" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(50, 550)
+
+[node name="Basic_Tile16" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(250, 650)
+
+[node name="Basic_Tile17" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(150, 650)
+
+[node name="Basic_Tile18" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(50, 650)
+
+[node name="Basic_Tile26" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(950, 50)
+
+[node name="Basic_Tile27" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1050, 50)
+
+[node name="Basic_Tile28" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1150, 50)
+
+[node name="Basic_Tile31" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(950, 150)
+
+[node name="Basic_Tile32" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1050, 150)
+
+[node name="Basic_Tile35" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(950, 250)
+
+[node name="Basic_Tile36" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1050, 250)
+
+[node name="Basic_Tile40" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(750, 550)
+
+[node name="Basic_Tile41" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(550, 650)
+
+[node name="Basic_Tile43" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(750, 650)
+
+[node name="Basic_Tile44" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(850, 650)
+
+[node name="Basic_Tile45" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(950, 650)
+
+[node name="Basic_Tile46" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1050, 650)
+
+[node name="Basic_Tile47" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(850, 550)
+
+[node name="Basic_Tile48" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(950, 550)
+
+[node name="Basic_Tile49" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1050, 550)
+
+[node name="Basic_Tile50" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1150, 550)
+
+[node name="Basic_Tile51" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1150, 150)
+
+[node name="Basic_Tile52" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1150, 250)
+
+[node name="Basic_Tile53" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1150, 350)
+
+[node name="Basic_Tile54" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1150, 450)
+
+[node name="Basic_Tile56" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1150, 650)
+
+[node name="Basic_Tile7" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(250, 50)
+
+[node name="Basic_Tile57" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(250, 350)
+
+[node name="Basic_Tile58" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(150, 350)
+
+[node name="Basic_Tile59" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(50, 350)
+
+[node name="Basic_Tile60" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(250, 250)
+
+[node name="Basic_Tile61" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(150, 250)
+
+[node name="Basic_Tile62" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(50, 250)
+
+[node name="Basic_Tile72" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1050, 450)
+
+[node name="Basic_Tile73" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(950, 450)
+
+[node name="Basic_Tile75" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(450, 650)
+
+[node name="Basic_Tile76" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(350, 650)
+
+[node name="Basic_Tile77" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(550, 550)
+
+[node name="Basic_Tile78" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(450, 550)
+
+[node name="Basic_Tile83" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(1050, 350)
+
+[node name="Basic_Tile84" parent="Tiles" instance=ExtResource("1_awe8u")]
+position = Vector2(950, 350)
+
+[node name="River_Tile" parent="Tiles" instance=ExtResource("2_s43yw")]
+position = Vector2(650, 550)
+
+[node name="River_Tile2" parent="Tiles" instance=ExtResource("2_s43yw")]
+position = Vector2(650, 650)
+
+[node name="Mountain_Tile" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(350, 450)
+
+[node name="Mountain_Tile2" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(450, 450)
+
+[node name="Mountain_Tile3" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(550, 450)
+
+[node name="Mountain_Tile5" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(750, 450)
+
+[node name="Mountain_Tile6" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(850, 450)
+
+[node name="Mountain_Tile4" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(350, 350)
+
+[node name="Mountain_Tile7" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(450, 350)
+
+[node name="Mountain_Tile8" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(550, 350)
+
+[node name="Mountain_Tile9" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(750, 350)
+
+[node name="Mountain_Tile10" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(850, 350)
+
+[node name="Mountain_Tile11" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(350, 250)
+
+[node name="Mountain_Tile12" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(450, 250)
+
+[node name="Mountain_Tile13" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(550, 250)
+
+[node name="Mountain_Tile14" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(750, 250)
+
+[node name="Mountain_Tile15" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(850, 250)
+
+[node name="Mountain_Tile16" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(350, 150)
+
+[node name="Mountain_Tile21" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(350, 50)
+
+[node name="Mountain_Tile22" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(450, 50)
+
+[node name="Mountain_Tile23" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(550, 50)
+
+[node name="Mountain_Tile24" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(750, 50)
+
+[node name="Mountain_Tile25" parent="Tiles" instance=ExtResource("3_ryx0p")]
+position = Vector2(850, 50)
+
+[node name="Characters" type="Node" parent="."]
+
+[node name="Agent" parent="Characters" instance=ExtResource("2_jsn8n")]
+position = Vector2(150, 150)
+Team = 1
+
+[node name="Agent2" parent="Characters" instance=ExtResource("2_jsn8n")]
+position = Vector2(1150, 150.00002)
+Team = 2
+AIEnabled = true
+
+[node name="Agent3" parent="Characters" instance=ExtResource("2_jsn8n")]
+position = Vector2(150, 350.00003)
+Team = 1
+
+[node name="Agent4" parent="Characters" instance=ExtResource("2_jsn8n")]
+position = Vector2(1050, 150)
+Team = 2
+AIEnabled = true
+
+[node name="Agent5" parent="Characters" instance=ExtResource("2_jsn8n")]
+position = Vector2(1050, 650)
+Team = 2
+AIEnabled = true
+
+[node name="Forest_Tile" parent="." instance=ExtResource("5_vtpsr")]
+position = Vector2(650, 450)
+
+[node name="Forest_Tile2" parent="." instance=ExtResource("5_vtpsr")]
+position = Vector2(650, 350)
+
+[node name="Forest_Tile3" parent="." instance=ExtResource("5_vtpsr")]
+position = Vector2(650, 250)
+
+[node name="Forest_Tile4" parent="." instance=ExtResource("5_vtpsr")]
+position = Vector2(650, 150)
+
+[node name="Forest_Tile6" parent="." instance=ExtResource("5_vtpsr")]
+position = Vector2(550, 150)
+
+[node name="Forest_Tile7" parent="." instance=ExtResource("5_vtpsr")]
+position = Vector2(450, 150)
+
+[node name="Forest_Tile8" parent="." instance=ExtResource("5_vtpsr")]
+position = Vector2(750, 150)
+
+[node name="Forest_Tile9" parent="." instance=ExtResource("5_vtpsr")]
+position = Vector2(850, 150)
+
+[node name="Forest_Tile5" parent="." instance=ExtResource("5_vtpsr")]
+position = Vector2(650, 50)

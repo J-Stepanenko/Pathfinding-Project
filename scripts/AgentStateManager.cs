@@ -25,6 +25,20 @@ public partial class AgentStateManager : Node
         {
             Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
         };
+        // First check current tile's neighbours for enemies
+        foreach (var dir in directions)
+        {
+            var neighbourPos = agent.GridPosition + dir;
+            if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
+            {
+                var neighbourAgent = GridManager.Instance.GetAgent(neighbourPos);
+                if (neighbourAgent.Team != agent.Team)
+                {
+                    return AgentState.Attacking;
+                }
+            }
+        }
+        // Then check all reachable tiles
         foreach (var tile in GridManager.Instance.GetReachableTiles(agent.GridPosition, agent.MoveRange))
         {
             foreach (var dir in directions) 
@@ -35,6 +49,8 @@ public partial class AgentStateManager : Node
                 if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
                 {
                     var tileAgent = GridManager.Instance.GetAgent(neighbourPos);
+                    if (tileAgent == agent) continue;
+
                     if (tileAgent.Team != TurnManager.Instance.TeamTurn)
                     {
                         return AgentState.Attacking;
