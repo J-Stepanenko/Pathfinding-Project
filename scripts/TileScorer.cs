@@ -2,22 +2,38 @@
 using Godot;
 using System.Collections.Generic;
 using System.Linq;
-using static AgentStateMachine;
+using static AgentStateManager;
 
 public static class TileScorer
 {
-    public static Tile FindBestTile(Agent agent, AgentStates state)
+    public static Tile FindBestTile(Agent agent, AgentState state)
     {
         var tiles = GridManager.Instance.Tiles;
         Dictionary<Vector2I, Tile> bestTiles = new Dictionary<Vector2I, Tile>();
         var bestScore = 0;
         switch (state)
         {
-            case (AgentStates.Attacking):
+            case AgentState.Attacking:
                 var targetPos = FindAttackTarget(agent).GridPosition;
                 foreach (var tile in tiles)
                 {
                     var score = ScoreTileAttacking(tile.Value, agent, targetPos);
+                    if (score > bestScore)
+                    {
+                        bestScore = score;
+                        bestTiles.Clear();
+                        bestTiles.Add(tile.Key, tile.Value);
+                    }
+                    else if (score == bestScore)
+                    {
+                        bestTiles.Add(tile.Key, tile.Value);
+                    }
+                }
+                break;
+            case AgentState.Forming_up:
+                foreach (var tile in tiles)
+                {
+                    var score = ScoreTileFormingUp(tile.Value, agent);
                     if (score > bestScore)
                     {
                         bestScore = score;
@@ -125,6 +141,51 @@ public static class TileScorer
         if (score < 0)
         {
             score = 0;
+        }
+        if (score > 0)
+        {
+            GD.Print("Agent: " + agent.Name + " score for tile: " + tile.GridPosition + " is: " + score);
+        }
+        return score;
+    }
+
+    private static int ScoreTileFormingUp(Tile tile, Agent agent)
+    {
+        if (!tile
+            .CanPassThisTurn)
+        {
+            return 0;
+        }
+        var tiles = GridManager.Instance.GetReachableTiles(agent.GridPosition, agent.MoveRange);
+
+        var score = 0;
+        Vector2I[] directions =
+        {
+            Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
+        };
+
+        foreach (var dir in directions)
+        {
+            var neighbourPos = tile.GridPosition + dir;
+
+            if (GridManager.Instance.GetTile(neighbourPos) == null) continue;
+
+            var neighbourTile = GridManager.Instance.GetTile(neighbourPos);
+            if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
+            {
+                var neighbourAgent = GridManager.Instance.GetAgent(neighbourPos);
+                if (neighbourAgent.Team == agent.Team && neighbourAgent != agent)
+                {
+                    if (neighbourAgent.InFormation)
+                    {
+                        score++;
+                    }
+                    else
+                    {
+                        score += 2;
+                    }
+                }
+            }
         }
         if (score > 0)
         {

@@ -12,12 +12,16 @@ public partial class Agent : Node2D
     [Export] public bool AIEnabled;
     public Vector2I GridPosition;
     public bool CanMove;
+    public bool InFormation;
+    public AgentState State;
 
     private List<Tile> reachableTiles = new();
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
+        State = AgentState.Forming_up;
         CanMove = true;
+        InFormation = false;
         var meshInstance = this.GetChild<MeshInstance2D>(0);
         area = meshInstance.GetChild<Area2D>(0);
         area.InputEvent += _on_mouse_press;
@@ -87,7 +91,8 @@ public partial class Agent : Node2D
         {
             if (CanMove && TurnManager.Instance.TeamTurn == this.Team)
             {
-                var bestTile = TileScorer.FindBestTile(this, AgentStateMachine.AgentStates.Attacking);
+                State = AgentStateManager.Instance.CalculateState(this);
+                var bestTile = TileScorer.FindBestTile(this, State);
                 var path = GridManager.Instance.GetPath(this.GridPosition, bestTile.GridPosition, MoveRange);
                 if (path.Count == 0)
                 {
