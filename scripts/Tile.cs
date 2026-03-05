@@ -25,40 +25,42 @@ public partial class Tile : Node2D
 	public override void _Ready()
 	{
 		var meshInstance = this.GetChild<MeshInstance2D>(0);
-        var label = this.GetChild<Label>(1);
-        area = meshInstance.GetChild<Area2D>(0);
+		var label = this.GetChild<Label>(1);
+		area = meshInstance.GetChild<Area2D>(0);
 		area.InputEvent += _on_mouse_press;
 		CanPassThisTurn = IsWalkable;
 		defaultColor = meshInstance.Modulate;
 
-        GridPosition = Utilities.GetGridPosFromNode(this);
-        label.Text = GridPosition.ToString();
+		GridPosition = Utilities.GetGridPosFromNode(this);
+		label.Text = GridPosition.ToString();
 
-        GridManager.Instance.RegisterTile(GridPosition, this);
-        TurnManager.Instance.TurnEnded += OnTurnEnd;
-    }
+		GridManager.Instance.RegisterTile(GridPosition, this);
+
+		InputManager.Instance.AgentDeselected += RemoveHighlight;
+		TurnManager.Instance.TurnEnded += OnTurnEnd;
+	}
 
 	// Check if an agent has begun on this tile
 	// Must be called by GridManager as order is important
 	public void Init()
 	{
-        if (GridManager.Instance.CheckTileHasAgent(GridPosition))
-        {
-            var agent = GridManager.Instance.GetAgent(GridPosition);
-            if (agent.Team != TurnManager.Instance.TeamTurn)
-            {
-                CanPassThisTurn = false;
-            }
-            else
-            {
-                CanPassThisTurn = IsWalkable;
-            }
-        }
-        else
-        {
-            CanPassThisTurn = IsWalkable;
-        }
-    }
+		if (GridManager.Instance.CheckTileHasAgent(GridPosition))
+		{
+			var agent = GridManager.Instance.GetAgent(GridPosition);
+			if (agent.Team != TurnManager.Instance.TeamTurn)
+			{
+				CanPassThisTurn = false;
+			}
+			else
+			{
+				CanPassThisTurn = IsWalkable;
+			}
+		}
+		else
+		{
+			CanPassThisTurn = IsWalkable;
+		}
+	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
@@ -66,27 +68,37 @@ public partial class Tile : Node2D
 
 	}
 
+	public void RemoveHighlight()
+	{
+		var mesh = this.GetChild<MeshInstance2D>(0);
+		mesh.Modulate = defaultColor;
+	}
+
 	public void SetHighlight(bool highlighted)
 	{
-		this.Highlighted = highlighted;
+		Highlighted = highlighted;
 		var mesh = this.GetChild<MeshInstance2D>(0);
 		mesh.Modulate = highlighted ? Colors.Green : defaultColor;
-    }
+	}
+
+	public void HighlightEnemy()
+	{
+		Highlighted = true;
+		var mesh = this.GetChild<MeshInstance2D>(0);
+		mesh.Modulate = Colors.Red;
+	}
 
 	public void _on_mouse_press(Node viewport, InputEvent @event, long shapeIdx) 
 	{
 		if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
 		{
-			if (mouseEvent.ButtonIndex == MouseButton.Left)
+			var agent = GridManager.Instance.GetAgent(GridPosition);
+			// Check that there is no agent, or agent is an enemy
+			if (mouseEvent.ButtonIndex == MouseButton.Left
+				&& (agent == null || agent.Team != TurnManager.Instance.TeamTurn))
 			{
-				GD.Print(GridPosition);
-				var hasAgent = GridManager.Instance.CheckTileHasAgent(GridPosition);
-				if (hasAgent)
-				{
-					return;
-				}
 				InputManager.Instance.TileSelected(Highlighted, this);
-            }
+			}
 			else if (mouseEvent.ButtonIndex == MouseButton.Right && Highlighted)
 			{
 
@@ -106,12 +118,12 @@ public partial class Tile : Node2D
 			}
 			else
 			{
-                CanPassThisTurn = IsWalkable;
+				CanPassThisTurn = IsWalkable;
 			}
 		}
 		else
 		{
-            CanPassThisTurn = IsWalkable;
+			CanPassThisTurn = IsWalkable;
 		}
 		if (IsWalkable)
 		{
