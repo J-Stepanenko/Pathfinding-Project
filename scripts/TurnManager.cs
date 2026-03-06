@@ -34,9 +34,13 @@ public partial class TurnManager : Node
 		}
 		foreach(var agent in agentsValues)
 		{
-			agent.DoAITurn();
+			agent.DoAIMove();
 		}
-		if (TeamTurn+1 > 2)
+        foreach (var agent in agentsValues)
+        {
+			agent.DoAICombat();
+        }
+        if (TeamTurn+1 > 2)
 		{
 			TeamTurn = 1;
 			Turn++;

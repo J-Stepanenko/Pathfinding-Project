@@ -53,7 +53,13 @@ public partial class InputManager : Node
 				var agent = GridManager.Instance.GetAgent(tile.GridPosition);
 				if (agent.Team != selectedAgent.Team)
 				{
-					CombatManager.Instance.ResolveCombat(selectedAgent, agent);
+					if (selectedAgent.CanAttack
+						&& GridManager.Instance.CheckTileIsNeighbour(selectedAgent.GridPosition, tile.GridPosition))
+					{
+						selectedAgent.Attack(agent);
+						GD.Print(selectedAgent.Name + " attacked");
+                    }
+					
                     DeselectAgent();
                     return;
 				}

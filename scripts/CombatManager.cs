@@ -21,9 +21,10 @@ public partial class CombatManager : Node
 		const double ForestDefense = 1.5;
 		const double MountainDefense = 2;
 		const double RiverDefense = 0.75;
+		const double FormationBonus = 1.2;
 
 		var rng = new Random();
-		double attackerDamage = (attacker.Health / 2) + rng.Next(-5, 6);
+		double attackerDamage = Math.Max((attacker.Health / 2) * (attacker.CheckInFormation()? FormationBonus : 1) + rng.Next(-5, 6), 5);
 		double defenseValue = 1;
 		switch (GridManager.Instance.GetTile(defender.GridPosition).Terrain)
 		{
@@ -44,10 +45,11 @@ public partial class CombatManager : Node
 		attackerDamage /= defenseValue;
 
 		defender.Health = (int)Math.Round(defender.Health - attackerDamage);
+		double defenderDamage = 0;
 
 		if (defender.Health > 0)
 		{
-			double defenderDamage = (defender.Health / 2) + rng.Next(-5, 6);
+			defenderDamage = Math.Max((defender.Health / 2) * (defender.CheckInFormation() ? FormationBonus : 1) + rng.Next(-5, 6), 5);
 			switch (GridManager.Instance.GetTile(attacker.GridPosition).Terrain)
 			{
 				case TileTerrain.Plains:
@@ -66,8 +68,10 @@ public partial class CombatManager : Node
 
 			defenderDamage /= defenseValue;
 			attacker.Health = (int)Math.Round(attacker.Health - defenderDamage);
-			attacker.TookDamage();
+			attacker.HealthChanged();
 		}
-		defender.TookDamage();
-	}
+		defender.HealthChanged();
+        GD.Print(attacker.Name + " combat with " + defender.Name+", attacker damage = "+attackerDamage+" defender damage = "+defenderDamage+
+			"\n Attacker formation bonus = "+attacker.InFormation+" Defender formation bonus = "+defender.InFormation);
+    }
 }

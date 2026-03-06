@@ -15,6 +15,8 @@ public partial class Tile : Node2D
 	[Export] public int MoveCost = 1;
 	[Export] public bool IsWalkable = true;
 	[Export] public TileTerrain Terrain;
+	[Export] public bool IsBase = false;
+	[Export] public int BaseTeam = -1;
 
 	public Vector2I GridPosition;
 	public bool Highlighted = false;
@@ -35,6 +37,10 @@ public partial class Tile : Node2D
 		label.Text = GridPosition.ToString();
 
 		GridManager.Instance.RegisterTile(GridPosition, this);
+		if (IsBase)
+		{
+			GridManager.Instance.RegisterBase(GridPosition, this);
+		}
 
 		InputManager.Instance.AgentDeselected += RemoveHighlight;
 		TurnManager.Instance.TurnEnded += OnTurnEnd;

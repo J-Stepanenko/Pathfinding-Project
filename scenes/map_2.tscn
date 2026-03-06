@@ -1,263 +1,268 @@
-[gd_scene load_steps=3 format=3 uid="uid://bi7mvuupy6njx"]
+[gd_scene load_steps=4 format=3 uid="uid://bi7mvuupy6njx"]
 
-[ext_resource type="PackedScene" uid="uid://ce2oqp1oeti70" path="res://scenes/tiles/basic_tile.tscn" id="1_8i8ja"]
+[ext_resource type="PackedScene" uid="uid://ce2oqp1oeti70" path="res://scenes/tiles/plains_tile.tscn" id="1_8i8ja"]
+[ext_resource type="PackedScene" uid="uid://cepmb8sai6hrj" path="res://scenes/tiles/base_tile.tscn" id="2_a7y6p"]
 [ext_resource type="PackedScene" uid="uid://3angrksctdgc" path="res://scenes/agent.tscn" id="5_kocsa"]
 
 [node name="Map" type="Node2D"]
 
 [node name="Tiles" type="Node" parent="."]
 
-[node name="Basic_Tile" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(50, 50)
 
-[node name="Basic_Tile2" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile2" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(150, 50)
 
-[node name="Basic_Tile3" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile3" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(50, 150)
 
-[node name="Basic_Tile4" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile4" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(150, 150)
 
-[node name="Basic_Tile5" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile5" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(250, 150)
 
-[node name="Basic_Tile6" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile6" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(350, 250)
 
-[node name="Basic_Tile8" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile7" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(350, 450)
 
-[node name="Basic_Tile9" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile8" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(250, 450)
 
-[node name="Basic_Tile10" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile9" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(150, 450)
 
-[node name="Basic_Tile11" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile10" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(50, 450)
 
-[node name="Basic_Tile12" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile11" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(350, 550)
 
-[node name="Basic_Tile13" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile12" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(250, 550)
 
-[node name="Basic_Tile14" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile13" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(150, 550)
 
-[node name="Basic_Tile15" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile14" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(50, 550)
 
-[node name="Basic_Tile16" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile15" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(250, 650)
 
-[node name="Basic_Tile17" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile16" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(150, 650)
 
-[node name="Basic_Tile18" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile17" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(50, 650)
 
-[node name="Basic_Tile19" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile18" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(450, 50)
 
-[node name="Basic_Tile20" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile19" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(550, 50)
 
-[node name="Basic_Tile21" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile20" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(550, 150)
 
-[node name="Basic_Tile22" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile21" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(650, 50)
 
-[node name="Basic_Tile23" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile22" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(650, 150)
 
-[node name="Basic_Tile24" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile23" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(750, 50)
 
-[node name="Basic_Tile25" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile24" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(850, 50)
 
-[node name="Basic_Tile26" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile25" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(950, 50)
 
-[node name="Basic_Tile27" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile26" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1050, 50)
 
-[node name="Basic_Tile28" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile27" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1150, 50)
 
-[node name="Basic_Tile29" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile28" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(750, 150)
 
-[node name="Basic_Tile30" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile29" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(850, 150)
 
-[node name="Basic_Tile31" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile30" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(950, 150)
 
-[node name="Basic_Tile32" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile31" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1050, 150)
 
-[node name="Basic_Tile33" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile32" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(750, 250)
 
-[node name="Basic_Tile34" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile33" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(850, 250)
 
-[node name="Basic_Tile35" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile34" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(950, 250)
 
-[node name="Basic_Tile36" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile35" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1050, 250)
 
-[node name="Basic_Tile37" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile36" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(650, 450)
 
-[node name="Basic_Tile38" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile37" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(750, 450)
 
-[node name="Basic_Tile39" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile38" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(650, 550)
 
-[node name="Basic_Tile40" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile39" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(750, 550)
 
-[node name="Basic_Tile41" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile40" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(550, 650)
 
-[node name="Basic_Tile42" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile41" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(650, 650)
 
-[node name="Basic_Tile43" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile42" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(750, 650)
 
-[node name="Basic_Tile44" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile43" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(850, 650)
 
-[node name="Basic_Tile45" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile44" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(950, 650)
 
-[node name="Basic_Tile46" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile45" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1050, 650)
 
-[node name="Basic_Tile47" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile46" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(850, 550)
 
-[node name="Basic_Tile48" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile47" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(950, 550)
 
-[node name="Basic_Tile49" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile48" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1050, 550)
 
-[node name="Basic_Tile50" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile49" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1150, 550)
 
-[node name="Basic_Tile51" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile50" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1150, 150)
 
-[node name="Basic_Tile52" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile51" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1150, 250)
 
-[node name="Basic_Tile53" parent="Tiles" instance=ExtResource("1_8i8ja")]
-position = Vector2(1150, 350)
-
-[node name="Basic_Tile54" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile53" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1150, 450)
 
-[node name="Basic_Tile56" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile54" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1150, 650)
 
-[node name="Basic_Tile7" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile55" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(250, 50)
 
-[node name="Basic_Tile55" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile56" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(350, 50)
 
-[node name="Basic_Tile57" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile57" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(250, 350)
 
-[node name="Basic_Tile58" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile58" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(150, 350)
 
-[node name="Basic_Tile59" parent="Tiles" instance=ExtResource("1_8i8ja")]
-position = Vector2(50, 350)
-
-[node name="Basic_Tile60" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile60" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(250, 250)
 
-[node name="Basic_Tile61" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile61" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(150, 250)
 
-[node name="Basic_Tile62" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile62" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(50, 250)
 
-[node name="Basic_Tile63" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile63" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(650, 250)
 
-[node name="Basic_Tile64" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile64" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(550, 250)
 
-[node name="Basic_Tile65" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile65" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(450, 250)
 
-[node name="Basic_Tile66" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile66" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(550, 350)
 
-[node name="Basic_Tile67" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile67" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(450, 350)
 
-[node name="Basic_Tile68" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile68" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(350, 350)
 
-[node name="Basic_Tile69" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile69" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(850, 350)
 
-[node name="Basic_Tile70" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile70" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(750, 350)
 
-[node name="Basic_Tile71" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile71" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(650, 350)
 
-[node name="Basic_Tile72" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile72" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1050, 450)
 
-[node name="Basic_Tile73" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile73" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(950, 450)
 
-[node name="Basic_Tile74" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile74" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(850, 450)
 
-[node name="Basic_Tile75" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile75" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(450, 650)
 
-[node name="Basic_Tile76" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile76" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(350, 650)
 
-[node name="Basic_Tile77" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile77" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(550, 550)
 
-[node name="Basic_Tile78" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile78" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(450, 550)
 
-[node name="Basic_Tile79" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile79" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(550, 450)
 
-[node name="Basic_Tile80" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile80" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(450, 450)
 
-[node name="Basic_Tile81" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile81" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(450, 150)
 
-[node name="Basic_Tile82" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile82" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(350, 150)
 
-[node name="Basic_Tile83" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile83" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(1050, 350)
 
-[node name="Basic_Tile84" parent="Tiles" instance=ExtResource("1_8i8ja")]
+[node name="Plains_Tile84" parent="Tiles" instance=ExtResource("1_8i8ja")]
 position = Vector2(950, 350)
+
+[node name="Base_Tile" parent="Tiles" instance=ExtResource("2_a7y6p")]
+position = Vector2(50, 350)
+IsBase = true
+BaseTeam = 1
+
+[node name="Base_Tile2" parent="Tiles" instance=ExtResource("2_a7y6p")]
+position = Vector2(1150, 350)
+IsBase = true
+BaseTeam = 2
 
 [node name="Characters" type="Node" parent="."]
 

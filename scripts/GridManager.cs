@@ -10,7 +10,9 @@ public partial class GridManager : Node
 
 	public Dictionary<Vector2I, Tile> Tiles = new();
 	public Dictionary<Vector2I, Agent> Agents = new();
-	private Agent selectedAgent;
+	public Dictionary<Vector2I, Tile> Team1Bases = new();
+    public Dictionary<Vector2I, Tile> Team2Bases = new();
+    private Agent selectedAgent;
 	private AStar2D astar = new AStar2D();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -46,6 +48,19 @@ public partial class GridManager : Node
 		Tiles[gridPos] = tile;
 	}
 
+	public void RegisterBase(Vector2I gridPos, Tile tile)
+	{
+		if (tile.BaseTeam == 1)
+		{
+			Team1Bases[gridPos] = tile;
+		}
+		else if (tile.BaseTeam == 2)
+		{
+			Team2Bases[gridPos] = tile;
+		}
+		GD.Print("Registered base for team " + tile.BaseTeam + " at: " + gridPos);
+	}
+
 	public void RegisterAgent(Vector2I agentPos, Agent agent)
 	{
 		Agents[agentPos] = agent;
@@ -74,6 +89,19 @@ public partial class GridManager : Node
 		return Agents.ContainsKey(gridPos);
 	}
 
+	public bool CheckTileIsNeighbour(Vector2I tile1Pos, Vector2I tile2Pos)
+	{
+        Vector2I[] directions =
+        {
+            Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
+        };
+		foreach (var dir in directions)
+		{
+			if (tile1Pos + dir == tile2Pos) return true;
+		}
+		return false;
+    }
+
 	// Djikstra's algorithm
 	public List<Tile> GetReachableTiles(Vector2I start, int moveRange)
 	{
@@ -90,6 +118,7 @@ public partial class GridManager : Node
 			Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
 		};
 
+		reachable.Add(start, GetTile(start));
 		while (queue.Count > 0)
 		{
 			var current = queue.Dequeue();

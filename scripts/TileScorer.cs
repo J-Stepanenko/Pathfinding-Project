@@ -117,6 +117,7 @@ public static class TileScorer
 				}
 			}
 		}
+		if (target == null) return agent;
 		GD.Print("Agent:" + agent.Name + " targetting " + target.GridPosition+" cost: "+lowestCost);
 		return target;
 	}
@@ -310,36 +311,54 @@ public static class TileScorer
         {
             return 0;
         }
-        var agents = GridManager.Instance.Agents;
+		Dictionary<Vector2I, Tile> bases;
+		if (thisAgent.Team == 1)
+		{
+			bases = GridManager.Instance.Team1Bases;
+		}
+		else
+		{
+			bases = GridManager.Instance.Team2Bases;
+		}
+
+		var agents = GridManager.Instance.Agents;
 
         var score = 0;
         Vector2I[] directions =
         {
             Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
         };
-
-        foreach (var agent in agents)
+        foreach (var _base in bases)
         {
-            foreach (var dir in directions)
-            {
-                if (GridManager.Instance.GetTile(agent.Key + dir) == null) continue;
-
-                GridManager.Instance.GetPath(thisAgent.GridPosition, agent.Key + dir, out var oldCost);
-                GridManager.Instance.GetPath(tile.GridPosition, agent.Key + dir, out var newCost);
-
-                if (agent.Value.Team == thisAgent.Team)
-                {
-                    score += newCost - oldCost;
-                }
-                else
-                {
-                    score += (newCost - oldCost) * 3;
-                }
-            }
+            GridManager.Instance.GetPath(thisAgent.GridPosition, _base.Key, out var oldCost);
+            GridManager.Instance.GetPath(tile.GridPosition, _base.Key, out var newCost);
+			GD.Print("cost to base old: " + oldCost);
+            GD.Print("cost to base new: " + newCost);
+            score += (oldCost - newCost) * 6;
         }
-        if (score > 0)
+
+		foreach (var agent in agents)
+		{
+			foreach (var dir in directions)
+			{
+				if (GridManager.Instance.GetTile(agent.Key + dir) == null) continue;
+
+				GridManager.Instance.GetPath(thisAgent.GridPosition, agent.Key + dir, out var oldCost);
+				GridManager.Instance.GetPath(tile.GridPosition, agent.Key + dir, out var newCost);
+
+				if (agent.Value.Team == thisAgent.Team)
+				{
+					score += newCost - oldCost;
+				}
+				else
+				{
+					score += (newCost - oldCost) * 3;
+				}
+			}
+		}
+		if (score > 0)
         {
-            //GD.Print("Agent: " + thisAgent.Name + " score for tile: " + tile.GridPosition + " is: " + score);
+        //	GD.Print("Agent: " + thisAgent.Name + " score for tile: " + tile.GridPosition + " is: " + score);
         }
         return score;
     }
