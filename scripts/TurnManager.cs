@@ -49,9 +49,12 @@ public partial class TurnManager : Node
 		{
 			TeamTurn++;
 		}
+		foreach (var agent in agentsDict)
+		{
+			GD.Print(agent.Value.Name + " at " + agent.Key);
+		}
 		GD.Print("Turn: "+Turn);
 		GD.Print("Team: "+TeamTurn);
-		GD.Print(GridManager.Instance.Agents.Count);
 		EmitSignal(SignalName.TurnEnded);
 	}
 

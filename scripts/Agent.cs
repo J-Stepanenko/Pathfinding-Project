@@ -188,24 +188,39 @@ public partial class Agent : Node2D
 			if (CanMove && TurnManager.Instance.TeamTurn == this.Team)
 			{
 				State = AgentStateManager.Instance.CalculateState(this);
-				if (State == AgentState.Retreating)
+                GD.Print("Agent: " + Name + " is in state: " + State + " at position: " + GridPosition);
+                if (State == AgentState.Retreating)
 				{
 					var tile = GridManager.Instance.GetTile(GridPosition);
 
                     if (tile.IsBase && tile.BaseTeam == Team)
 					{
+						// Heal and end turn
 						Health = 100;
 						HealthChanged();
 						return;
 					}
 				}
-				GD.Print("Agent: " + Name + " is in state: " + State + " at position: " + GridPosition);
+
 				var bestTile = TileScorer.FindBestTile(this, State);
 				var path = GridManager.Instance.GetPath(this.GridPosition, bestTile.GridPosition, MoveRange);
-                if (path.Count != 0)
-                {
-                    MoveAgent(path.Last());
-                }
+				if (path.Count != 0)
+				{
+					for (var i = 0; i < path.Count; i++)
+					{
+						var tile = path[path.Count - 1 - i];
+						if (GridManager.Instance.CheckTileHasAgent(tile))
+						{
+							continue;
+						}
+						else
+						{
+							MoveAgent(tile);
+							break;
+						}
+					}
+				}
+				CanMove = false;
 				CheckInFormation();
 			}
 		}
@@ -215,31 +230,34 @@ public partial class Agent : Node2D
 	{
 		if (AIEnabled)
         {
-            var tiles = GridManager.Instance.Tiles;
-            Vector2I[] directions =
-            {
-                Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
-            };
-            foreach (var dir in directions)
-            {
-                var neighbourPos = GridPosition + dir;
+			if (CanAttack && TurnManager.Instance.TeamTurn == Team)
+			{
+				var tiles = GridManager.Instance.Tiles;
+				Vector2I[] directions =
+				{
+					Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
+				};
+				foreach (var dir in directions)
+				{
+					var neighbourPos = GridPosition + dir;
 
-                if (!tiles.ContainsKey(neighbourPos)) continue;
+					if (!tiles.ContainsKey(neighbourPos)) continue;
 
-                tiles.TryGetValue(neighbourPos, out Tile neighbour);
+					tiles.TryGetValue(neighbourPos, out Tile neighbour);
 
-                if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
-                {
-                    var neighbourAgent = GridManager.Instance.GetAgent(neighbourPos);
-                    if (neighbourAgent.Team != this.Team)
-                    {
-                        if (CanAttack)
-                        {
-                            CombatManager.Instance.ResolveCombat(this, neighbourAgent);
-                        }
-                    }
-                }
-            }
+					if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
+					{
+						var neighbourAgent = GridManager.Instance.GetAgent(neighbourPos);
+						if (neighbourAgent.Team != this.Team)
+						{
+							if (CanAttack)
+							{
+								CombatManager.Instance.ResolveCombat(this, neighbourAgent);
+							}
+						}
+					}
+				}
+			}
         }
 	}
 

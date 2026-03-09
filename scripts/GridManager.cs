@@ -189,14 +189,6 @@ public partial class GridManager : Node
 				closestTile = GetTile(path.Last());
 			}
 		}
-		// Needs more testing
-		if (CheckTileHasAgent(closestTile.GridPosition))
-		{
-			var id = GetIdFromGridPos(closestTile.GridPosition);
-			astar.SetPointDisabled(id, true);
-			closestTile = FindClosestTile(tiles, start);
-			astar.SetPointDisabled(id, false);
-		}
 		return closestTile;
 	}
 
