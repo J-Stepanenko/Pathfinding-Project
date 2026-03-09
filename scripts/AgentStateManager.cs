@@ -87,7 +87,7 @@ public partial class AgentStateManager : Node
 
                     if (tileAgent.Team == TurnManager.Instance.TeamTurn)
                     {
-                        if (!tileAgent.InFormation)
+                        if (!tileAgent.InFormation && !agent.InFormation)
                         {
                             return AgentState.Forming_up;
                         }

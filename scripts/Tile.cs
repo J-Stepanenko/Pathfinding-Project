@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Text.RegularExpressions;
 
 public enum TileTerrain
 {
@@ -103,14 +104,14 @@ public partial class Tile : Node2D
 			if (mouseEvent.ButtonIndex == MouseButton.Left
 				&& (agent == null || agent.Team != TurnManager.Instance.TeamTurn))
 			{
-				InputManager.Instance.TileSelected(Highlighted, this);
+				InputManager.Instance.TileSelectedLeft(Highlighted, this);
 			}
-			else if (mouseEvent.ButtonIndex == MouseButton.Right && Highlighted)
+			else if (mouseEvent.ButtonIndex == MouseButton.Right)
 			{
-
+				InputManager.Instance.TileSelectedRight(this);
 			}
 		}
-	}
+    }
 
 	private void OnTurnEnd()
 	{

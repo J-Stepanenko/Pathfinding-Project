@@ -44,7 +44,7 @@ public partial class InputManager : Node
 	[Signal]
 	public delegate void AgentDeselectedEventHandler();
 
-	public void TileSelected(bool reachable, Tile tile)
+	public void TileSelectedLeft(bool reachable, Tile tile)
 	{
 		if (reachable && selectedAgent != null)
 		{
@@ -80,5 +80,10 @@ public partial class InputManager : Node
 		{
 			DeselectAgent();
 		}
+	}
+
+	public void TileSelectedRight(Tile tile)
+	{
+		TileScorer.ScoreTileManually(selectedAgent, tile);
 	}
 }

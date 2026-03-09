@@ -194,9 +194,9 @@ public static class TileScorer
 				}
 			}
         }
-        GD.Print("Agent:" + agent.Name + " targetting " + target.GridPosition + " cost: " + lowestCost);
         if (target == null) return agent;
-		return target;
+        GD.Print("Agent:" + agent.Name + " targetting " + target.GridPosition + " cost: " + lowestCost);
+        return target;
 	}
 
 	private static int ScoreTileAttacking(Tile tile, Agent thisAgent, Vector2I targetPos)
@@ -334,23 +334,6 @@ public static class TileScorer
 		}
 		if (score > 0)
         {
-            switch (tile.Terrain)
-            {
-                case TileTerrain.Plains:
-                    break;
-                case TileTerrain.Forest:
-                    score += 1;
-                    break;
-                case TileTerrain.Mountain:
-                    score += 2;
-                    break;
-                case TileTerrain.River:
-                    score -= 1;
-                    break;
-            }
-
-
-            // breaks entire formation thing
             var agents = GridManager.Instance.Agents;
 			var bestCostDifference = -1;
 			foreach (var agent in agents)
@@ -367,9 +350,35 @@ public static class TileScorer
 					{
 						bestCostDifference = costDifference;
 					}
+					// Terrain should only matter if there is an enemy within 5 tiles
+					if (newCost <= 5)
+					{
+                        switch (tile.Terrain)
+                        {
+                            case TileTerrain.Plains:
+                                break;
+                            case TileTerrain.Forest:
+                                score += 5;
+                                break;
+                            case TileTerrain.Mountain:
+                                score += 10;
+                                break;
+                            case TileTerrain.River:
+                                score -= 5;
+                                break;
+                        }
+                    }
 				}
 			}
-			score += Math.Max(Math.Min(bestCostDifference, thisAgent.MoveRange), 0);
+			GridManager.Instance.GetPath(thisAgent.GridPosition, tile.GridPosition, out var cost);
+			if (cost > 4)
+			{
+				score += Math.Max(Math.Min(bestCostDifference, 1), 0);
+			}
+			else
+			{
+				score += Math.Max(Math.Min(bestCostDifference, thisAgent.MoveRange), 0);
+			}
 
 			//GD.Print("Agent: " + agent.Name + " score for tile: " + tile.GridPosition + " is: " + score);
 		}
@@ -492,5 +501,19 @@ public static class TileScorer
         //	GD.Print("Agent: " + thisAgent.Name + " score for tile: " + tile.GridPosition + " is: " + score);
         }
         return score;
+    }
+
+	public static void ScoreTileManually(Agent agent, Tile tile)
+	{
+		var target = FindAttackTarget(agent);
+		var attacking = ScoreTileAttacking(tile, agent, target.GridPosition);
+		var formingUp = ScoreTileFormingUp(tile, agent);
+		var chasing = ScoreTileChasing(tile, agent, target.GridPosition);
+		var retreating = ScoreTileRetreating(tile, agent);
+
+		GD.Print("Score for attacking: " + attacking);
+        GD.Print("Score for forming: " + formingUp);
+        GD.Print("Score for chasing: " + chasing);
+        GD.Print("Score for retreating: " + retreating);
     }
 }

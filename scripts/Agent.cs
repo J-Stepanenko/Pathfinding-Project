@@ -42,23 +42,7 @@ public partial class Agent : Node2D
 
 	public void Init()
 	{
-		Vector2I[] directions =
-		{
-			Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
-		};
-
-		foreach (var dir in directions)
-		{
-			var neighbourPos = GridPosition + dir;
-			if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
-			{
-				var agent = GridManager.Instance.GetAgent(neighbourPos);
-				if (agent.Team == Team)
-				{
-					InFormation = true;
-				}
-			}
-		}
+		InFormation = CheckInFormation();
 
 		if (Team == 2)
 		{
@@ -170,15 +154,13 @@ public partial class Agent : Node2D
 				var agent = GridManager.Instance.GetAgent(GridPosition + dir);
 				if (agent.Team == Team)
 				{
-					InFormation = true;
 					GD.Print(Name + " is in formation");
-					return InFormation;
+					return true;
 				}
 			}
         }
         GD.Print(Name + " is not in formation");
-        InFormation = false;
-		return InFormation;
+		return false;
     }
 
 	public void DoAIMove()
@@ -187,6 +169,7 @@ public partial class Agent : Node2D
 		{
 			if (CanMove && TurnManager.Instance.TeamTurn == this.Team)
 			{
+				InFormation = CheckInFormation();
 				State = AgentStateManager.Instance.CalculateState(this);
                 GD.Print("Agent: " + Name + " is in state: " + State + " at position: " + GridPosition);
                 if (State == AgentState.Retreating)
@@ -221,7 +204,7 @@ public partial class Agent : Node2D
 					}
 				}
 				CanMove = false;
-				CheckInFormation();
+				InFormation = CheckInFormation();
 			}
 		}
 	}
@@ -280,7 +263,7 @@ public partial class Agent : Node2D
 	}
 	private void OnTurnEnd()
     {
-        CheckInFormation();
+        InFormation = CheckInFormation();
         CanMove = true;
 		CanAttack = true;
 	}
