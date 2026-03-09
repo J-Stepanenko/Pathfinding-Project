@@ -262,24 +262,22 @@ position = Vector2(950, 350)
 [node name="Characters" type="Node" parent="."]
 
 [node name="Agent" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(150, 150)
+position = Vector2(250, 550)
 Team = 1
 
-[node name="Agent2" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(1150, 150.00002)
-Team = 2
-AIEnabled = true
+[node name="Agent6" parent="Characters" instance=ExtResource("5_08pjf")]
+position = Vector2(150, 150.00003)
+Team = 1
 
 [node name="Agent3" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(150, 350.00003)
+position = Vector2(449.99997, 550)
 Team = 1
 
 [node name="Agent4" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(1050, 550)
+position = Vector2(949.99994, 150.00002)
 Team = 2
 AIEnabled = true
 
 [node name="Agent5" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(950, 550)
-Team = 2
-AIEnabled = true
+position = Vector2(350.00006, 150.00003)
+Team = 1

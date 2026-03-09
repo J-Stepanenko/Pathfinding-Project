@@ -94,7 +94,6 @@ public partial class Agent : Node2D
 						var agent = GridManager.Instance.GetAgent(tile.GridPosition + dir);
 						if (agent.Team != Team && CanAttack)
 						{
-							GD.Print("Move highlighting enemy tile");
 							GridManager.Instance.GetTile(tile.GridPosition + dir).HighlightEnemy();
 						}
 					}
@@ -111,7 +110,6 @@ public partial class Agent : Node2D
                     var agent = GridManager.Instance.GetAgent(tile.GridPosition + dir);
                     if (agent.Team != Team)
                     {
-                        GD.Print("Attack highlighting enemy tile");
                         GridManager.Instance.GetTile(tile.GridPosition + dir).HighlightEnemy();
                     }
                 }

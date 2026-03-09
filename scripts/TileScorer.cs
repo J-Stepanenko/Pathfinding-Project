@@ -418,7 +418,8 @@ public static class TileScorer
 			Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
 		};
 
-		foreach (var agent in agents)
+        var getsCloserToTarget = false;
+        foreach (var agent in agents)
 		{
 			foreach (var dir in directions)
 			{
@@ -430,18 +431,28 @@ public static class TileScorer
 				if (agent.Value.Team == thisAgent.Team)
 				{
 					score += oldCost - newCost;
-				}
+                }
 				else if (agent.Key == targetPos)
 				{
-					score += (oldCost - newCost) * 6;
+					score += (oldCost - newCost) * 10;
+
+					// Prevent going away from target
+					if (newCost <= oldCost)
+					{
+						getsCloserToTarget = true;
+					}
 				}
 				else
 				{
 					score += (oldCost - newCost) * 3;
 				}
 			}
-		}
-		if (score > 0)
+        }
+        if (!getsCloserToTarget)
+        {
+            return -10;
+        }
+        if (score > 0)
 		{
 			//GD.Print("Agent: " + thisAgent.Name + " score for tile: " + tile.GridPosition + " is: " + score);
 		}
