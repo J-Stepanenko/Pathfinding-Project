@@ -8,6 +8,7 @@ public partial class CombatManager : Node
 	public override void _Ready()
 	{
 		Instance = this;
+		GD.Print("CombatManager loaded");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

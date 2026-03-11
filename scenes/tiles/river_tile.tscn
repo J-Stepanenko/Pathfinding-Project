@@ -10,7 +10,7 @@ size = Vector2(0.9999999, 0.9999999)
 
 [node name="River_Tile" type="Node2D"]
 script = ExtResource("1_8l7ep")
-MoveCost = 3
+MoveCost = 2
 Terrain = 3
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]

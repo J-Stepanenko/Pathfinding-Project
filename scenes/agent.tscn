@@ -10,7 +10,7 @@ size = Vector2(100, 100)
 [node name="Agent" type="Node2D"]
 scale = Vector2(0.8, 0.8)
 script = ExtResource("1_jv27j")
-MoveRange = 4
+MoveRange = 3
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 modulate = Color(0.53885245, 0.050833814, 0.095078595, 1)
