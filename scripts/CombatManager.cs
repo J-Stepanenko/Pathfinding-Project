@@ -22,52 +22,54 @@ public partial class CombatManager : Node
 		const double ForestDefense = 1.5;
 		const double MountainDefense = 2;
 		const double RiverDefense = 0.75;
-		const double FormationBonus = 1.2;
+		const double FormationAttBonus = 1.1;
+		const double FormationDefBonus = 1.1;
 
 		var rng = new Random();
-		double attackerDamage = Math.Max((attacker.Health / 2) * (attacker.CheckInFormation()? FormationBonus : 1) + rng.Next(-5, 6), 5);
-		double defenseValue = 1;
+		double attackerDamage = Math.Max((attacker.Health / 2) * (attacker.CheckInFormation()? FormationAttBonus : 1) + rng.Next(-5, 6), 5);
+		double defenderDefense = defender.InFormation? FormationDefBonus : 1;
 		switch (GridManager.Instance.GetTile(defender.GridPosition).Terrain)
 		{
 			case TileTerrain.Plains:
-				defenseValue = PlainsDefense;
+				defenderDefense *= PlainsDefense;
 				break;
 			case TileTerrain.Forest:
-				defenseValue = ForestDefense;
+				defenderDefense *= ForestDefense;
 				break;
 			case TileTerrain.Mountain:
-				defenseValue = MountainDefense;
+				defenderDefense *= MountainDefense;
 				break;
 			case TileTerrain.River:
-				defenseValue = RiverDefense;
+				defenderDefense *= RiverDefense;
 				break;
 		}
 
-		attackerDamage /= defenseValue;
+		attackerDamage /= defenderDefense;
 
 		defender.Health = (int)Math.Round(defender.Health - attackerDamage);
 		double defenderDamage = 0;
+		double attackerDefense = attacker.InFormation? FormationDefBonus : 1;
 
 		if (defender.Health > 0)
 		{
-			defenderDamage = Math.Max((defender.Health / 2) * (defender.CheckInFormation() ? FormationBonus : 1) + rng.Next(-5, 6), 5);
+			defenderDamage = Math.Max((defender.Health / 2) * (defender.CheckInFormation() ? FormationAttBonus : 1) + rng.Next(-5, 6), 5);
 			switch (GridManager.Instance.GetTile(attacker.GridPosition).Terrain)
 			{
 				case TileTerrain.Plains:
-					defenseValue = PlainsDefense;
+                    attackerDefense *= PlainsDefense;
 					break;
 				case TileTerrain.Forest:
-					defenseValue = ForestDefense;
+                    attackerDefense *= ForestDefense;
 					break;
 				case TileTerrain.Mountain:
-					defenseValue = MountainDefense;
+                    attackerDefense *= MountainDefense;
 					break;
 				case TileTerrain.River:
-					defenseValue = RiverDefense;
+                    attackerDefense *= RiverDefense;
 					break;
 			}
 
-			defenderDamage /= defenseValue;
+			defenderDamage /= attackerDefense;
 			attacker.Health = (int)Math.Round(attacker.Health - defenderDamage);
 			attacker.HealthChanged();
 		}
