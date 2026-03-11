@@ -25,74 +25,57 @@ public partial class AgentStateManager : Node
 		{
 			return AgentState.Retreating;
 		}
-		Vector2I[] directions =
-		{
-			Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
-		};
 		// First check current tile's neighbours for enemies
-		foreach (var dir in directions)
+		foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition))
 		{
-			var neighbourPos = agent.GridPosition + dir;
-			if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
+			var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key);
+			if (neighbourAgent != null && neighbourAgent.Team != agent.Team)
 			{
-				var neighbourAgent = GridManager.Instance.GetAgent(neighbourPos);
-				if (neighbourAgent.Team != agent.Team)
+                return AgentState.Attacking;
+            }
+		}
+
+		// Then check all reachable tiles this turn
+        AgentState? currentState = null;
+        foreach (var tile in GridManager.Instance.GetReachableTiles(agent.GridPosition, agent.MoveRange))
+		{
+			foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(tile.GridPosition))
+			{
+				var tileAgent = GridManager.Instance.GetAgent(neighbourTile.Key);
+				if (tileAgent == null) continue;
+				if (tileAgent == agent) continue;
+
+
+                if (tileAgent.Team != TurnManager.Instance.TeamTurn)
 				{
 					return AgentState.Attacking;
 				}
-			}
-        }
-
-		// Then check all reachable tiles this turn
-        foreach (var tile in GridManager.Instance.GetReachableTiles(agent.GridPosition, agent.MoveRange))
-		{
-			AgentState? currentState = null;
-			foreach (var dir in directions) 
-			{
-				var neighbourPos = tile.GridPosition + dir;
-				var neighbourTile = GridManager.Instance.GetTile(neighbourPos); 
-
-				if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
+				else
 				{
-					var tileAgent = GridManager.Instance.GetAgent(neighbourPos);
-					if (tileAgent == agent) continue;
-
-					if (tileAgent.Team != TurnManager.Instance.TeamTurn)
+					if (!agent.InFormation)
 					{
-						return AgentState.Attacking;
-					}
-					else
-					{
-						if (!agent.InFormation)
-						{
-							currentState = AgentState.Forming_up;
-						}
+						currentState = AgentState.Forming_up;
 					}
 				}
 			}
-			if (currentState != null) return (AgentState)currentState;
         }
-		// Then check all tiles reachable within 2 moves
+        if (currentState != null) return (AgentState)currentState;
+        // Then check all tiles reachable within 2 moves
         foreach (var tile in GridManager.Instance.GetReachableTiles(agent.GridPosition, agent.MoveRange * 2))
         {
-            foreach (var dir in directions)
-            {
-                var neighbourPos = tile.GridPosition + dir;
-                var neighbourTile = GridManager.Instance.GetTile(neighbourPos);
+			foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(tile.GridPosition))
+			{
+                var tileAgent = GridManager.Instance.GetAgent(neighbourTile.Key);
+                if (tileAgent == null) continue;
+                if (tileAgent == agent) continue;
 
-                if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
+                if (tileAgent.Team == TurnManager.Instance.TeamTurn)
                 {
-                    var tileAgent = GridManager.Instance.GetAgent(neighbourPos);
-                    if (tileAgent == agent) continue;
-
-                    if (tileAgent.Team == TurnManager.Instance.TeamTurn)
-                    {
-                        if (!tileAgent.InFormation && !agent.InFormation)
-                        {
-                            return AgentState.Forming_up;
-                        }
-                    }
-                }
+                    if (!tileAgent.InFormation && !agent.InFormation)
+					{
+						return AgentState.Forming_up;
+					}
+				}
             }
         }
         return AgentState.Chasing;

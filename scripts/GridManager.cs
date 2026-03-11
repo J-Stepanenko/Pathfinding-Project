@@ -91,13 +91,9 @@ public partial class GridManager : Node
 
 	public bool CheckTileIsNeighbour(Vector2I tile1Pos, Vector2I tile2Pos)
 	{
-        Vector2I[] directions =
-        {
-            Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
-        };
-		foreach (var dir in directions)
+		foreach (var tile in GetNeighbourTiles(tile1Pos))
 		{
-			if (tile1Pos + dir == tile2Pos) return true;
+			if (tile.Key == tile2Pos) return true;
 		}
 		return false;
     }
@@ -113,39 +109,30 @@ public partial class GridManager : Node
 		costSoFar[start] = 0;
 		queue.Enqueue(start, 0);
 
-		Vector2I[] directions = 
-		{
-			Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
-		};
-
 		reachable.Add(start, GetTile(start));
 		while (queue.Count > 0)
 		{
 			var current = queue.Dequeue();
 			int currentCost = costSoFar[current];
 
-			foreach (var dir in directions)
+            foreach (var neighbourTile in GetNeighbourTiles(current))
 			{
-				var neighbor = current + dir;
+				if (!neighbourTile.Value.CanPassThisTurn) continue; 
 
-				if (!Tiles.ContainsKey(neighbor)) continue;
+				int newCost = currentCost + neighbourTile.Value.MoveCost;
 
-				var tile = GetTile(neighbor);
-				if (!tile.CanPassThisTurn) continue;
+                if (newCost > moveRange) continue; // too far
 
-				int newCost = currentCost + tile.MoveCost;
+                // only visit if we found a cheaper path
+                if (!costSoFar.ContainsKey(neighbourTile.Key) || newCost < costSoFar[neighbourTile.Key])
+                {
+                    costSoFar[neighbourTile.Key] = newCost;
+                    queue.Enqueue(neighbourTile.Key, newCost);
+                    reachable.Add(neighbourTile.Key, neighbourTile.Value);
+                }
+            }
 
-				if (newCost > moveRange) continue; // too far
-
-				// only visit if we found a cheaper path
-				if (!costSoFar.ContainsKey(neighbor) || newCost < costSoFar[neighbor])
-				{
-					costSoFar[neighbor] = newCost;
-					queue.Enqueue(neighbor, newCost);
-					reachable.Add(tile.GridPosition, tile);
-				}
-			}
-		}
+        }
 
 		foreach (var agent in Agents)
 		{
@@ -208,30 +195,22 @@ public partial class GridManager : Node
 			astar.AddPoint(id, (Vector2)gridPos, tile.MoveCost);
 		}
 
-		// Connect neighbours
-		Vector2I[] directions = {
-			Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
-		};
-
 		foreach (var (gridPos, tile) in Tiles)
 		{
-			foreach (var dir in directions)
+			foreach (var neighbourTile in GetNeighbourTiles(gridPos))
 			{
-				var neighbour = gridPos + dir;
-				if (!Tiles.ContainsKey(neighbour)) continue;
-				if (!Tiles[neighbour].IsWalkable) continue;
+				if (!neighbourTile.Value.IsWalkable) continue;
+                long idA = GetIdFromGridPos(gridPos);
+                long idB = GetIdFromGridPos(neighbourTile.Key);
 
-				long idA = GetIdFromGridPos(gridPos);
-				long idB = GetIdFromGridPos(neighbour);
+                if (!astar.ArePointsConnected(idA, idB))
+                    astar.ConnectPoints(idA, idB);
 
-				if (!astar.ArePointsConnected(idA, idB))
-					astar.ConnectPoints(idA, idB);
-
-				if (!tile.CanPassThisTurn)
-				{
-					astar.SetPointDisabled(idA, true);
-				}
-			}
+                if (!tile.CanPassThisTurn)
+                {
+                    astar.SetPointDisabled(idA, true);
+                }
+            }
 		}
 	}
 
@@ -315,4 +294,20 @@ public partial class GridManager : Node
 	{
 		return gridPos.X + gridPos.Y * 1000; // Assume grid is never wider than 1000
 	}
+
+	public Dictionary<Vector2I, Tile> GetNeighbourTiles(Vector2I gridPos)
+	{
+        Vector2I[] directions = 
+		{
+            Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
+        };
+		var tiles = new Dictionary<Vector2I, Tile>();
+		foreach(var dir in directions)
+		{
+			var tile = GetTile(gridPos + dir);
+			if (tile != null) tiles.Add(gridPos + dir, tile);
+		}
+
+		return tiles;
+    }
 }

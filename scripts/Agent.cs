@@ -76,10 +76,6 @@ public partial class Agent : Node2D
 		{
 			return;
 		}
-        Vector2I[] directions =
-            {
-                Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
-            };
         if (CanMove)
 		{
 			reachableTiles = GridManager.Instance.GetReachableTiles(GridPosition, MoveRange);
@@ -87,31 +83,25 @@ public partial class Agent : Node2D
 
 			foreach (var tile in reachableTiles)
 			{
-				foreach (var dir in directions)
+				foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(tile.GridPosition))
 				{
-					if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition + dir))
+					var agent = GridManager.Instance.GetAgent(neighbourTile.Key);
+					if (agent != null && agent.Team != Team && CanAttack)
 					{
-						var agent = GridManager.Instance.GetAgent(tile.GridPosition + dir);
-						if (agent.Team != Team && CanAttack)
-						{
-							GridManager.Instance.GetTile(tile.GridPosition + dir).HighlightEnemy();
-						}
-					}
+                        GridManager.Instance.GetTile(neighbourTile.Key).HighlightEnemy();
+                    }
 				}
 			}
 		}
 		if (CanAttack)
 		{
 			var tile = GridManager.Instance.GetTile(GridPosition);
-			foreach (var dir in directions)
+			foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(tile.GridPosition))
 			{
-                if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition + dir))
+                var agent = GridManager.Instance.GetAgent(neighbourTile.Key);
+                if (agent != null && agent.Team != Team && CanAttack)
                 {
-                    var agent = GridManager.Instance.GetAgent(tile.GridPosition + dir);
-                    if (agent.Team != Team)
-                    {
-                        GridManager.Instance.GetTile(tile.GridPosition + dir).HighlightEnemy();
-                    }
+                    GridManager.Instance.GetTile(neighbourTile.Key).HighlightEnemy();
                 }
             }
 		}
@@ -140,23 +130,15 @@ public partial class Agent : Node2D
 
 	public bool CheckInFormation()
 	{
-        Vector2I[] directions =
-        {
-            Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
-        };
-		foreach(var dir in directions)
+		foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(GridPosition))
 		{
-			if (GridManager.Instance.GetTile(GridPosition + dir) == null) continue;
-			else if (GridManager.Instance.CheckTileHasAgent(GridPosition + dir))
+			var agent = GridManager.Instance.GetAgent(neighbourTile.Key);
+			if (agent != null && agent.Team == Team) 
 			{
-				var agent = GridManager.Instance.GetAgent(GridPosition + dir);
-				if (agent.Team == Team)
-				{
-					GD.Print(Name + " is in formation");
-					return true;
-				}
-			}
-        }
+                GD.Print(Name + " is in formation");
+                return true;
+            }
+		}
         GD.Print(Name + " is not in formation");
 		return false;
     }
@@ -213,29 +195,12 @@ public partial class Agent : Node2D
         {
 			if (CanAttack && TurnManager.Instance.TeamTurn == Team)
 			{
-				var tiles = GridManager.Instance.Tiles;
-				Vector2I[] directions =
+				foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(GridPosition))
 				{
-					Vector2I.Up, Vector2I.Down, Vector2I.Left, Vector2I.Right
-				};
-				foreach (var dir in directions)
-				{
-					var neighbourPos = GridPosition + dir;
-
-					if (!tiles.ContainsKey(neighbourPos)) continue;
-
-					tiles.TryGetValue(neighbourPos, out Tile neighbour);
-
-					if (GridManager.Instance.CheckTileHasAgent(neighbourPos))
+					var agent = GridManager.Instance.GetAgent(neighbourTile.Key);
+					if (agent != null && agent.Team != Team)
 					{
-						var neighbourAgent = GridManager.Instance.GetAgent(neighbourPos);
-						if (neighbourAgent.Team != this.Team)
-						{
-							if (CanAttack)
-							{
-								CombatManager.Instance.ResolveCombat(this, neighbourAgent);
-							}
-						}
+						CombatManager.Instance.ResolveCombat(this, agent);
 					}
 				}
 			}
