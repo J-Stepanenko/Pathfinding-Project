@@ -74,6 +74,12 @@ public partial class AIManager : Node
             foreach (var agent in agentsValues)
             {
                 agent.DoAIMove();
+
+                // Try to attack sooner in case formation is broken on the next agent's move
+                if (agent.InFormation)
+                {
+                    agent.DoAICombat();
+                }
             }
             foreach (var agent in agentsValues)
             {

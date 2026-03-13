@@ -222,6 +222,7 @@ public partial class Agent : Node2D
 					if (agent != null && agent.Team != Team)
 					{
 						CombatManager.Instance.ResolveCombat(this, agent);
+						CanAttack = false;
 					}
 				}
 			}
@@ -232,7 +233,7 @@ public partial class Agent : Node2D
 	{
 		var label = this.GetChild<Label>(1);
 		label.Text = Name + "\n" + Team + "\n" + Health;
-		if (Health < 0)
+		if (Health <= 0)
 		{
 			this.Visible = false;
 			GridManager.Instance.DeregisterAgent(GridPosition);
