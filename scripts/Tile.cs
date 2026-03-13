@@ -37,7 +37,10 @@ public partial class Tile : Node2D
 		GridPosition = Utilities.GetGridPosFromNode(this);
 		label.Text = GridPosition.ToString();
 
-		GridManager.Instance.RegisterTile(GridPosition, this);
+		if (IsWalkable)
+		{
+			GridManager.Instance.RegisterTile(GridPosition, this);
+		}
 		if (IsBase)
 		{
 			GridManager.Instance.RegisterBase(GridPosition, this);

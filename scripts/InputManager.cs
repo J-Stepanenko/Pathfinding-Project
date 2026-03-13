@@ -53,6 +53,7 @@ public partial class InputManager : Node
 				var agent = GridManager.Instance.GetAgent(tile.GridPosition);
 				if (agent.Team != selectedAgent.Team)
 				{
+					// Attack if selected tile is neighbouring selected agent's tile
 					if (selectedAgent.CanAttack
 						&& GridManager.Instance.CheckTileIsNeighbour(selectedAgent.GridPosition, tile.GridPosition))
 					{

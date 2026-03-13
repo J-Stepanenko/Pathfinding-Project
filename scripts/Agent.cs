@@ -114,19 +114,40 @@ public partial class Agent : Node2D
 		GD.Print(Name + " Deselected");
 	}
 
-	public void MoveAgent(Vector2I gridPos)
+	public void MoveAgent(Vector2I newPos)
 	{
-		GD.Print(Name + " moving from " + GridPosition + " to " + gridPos);
-		GridPosition = gridPos;
+		GD.Print(Name + " moving from " + GridPosition + " to " + newPos);
+        var oldPos = GridPosition;
+        GridPosition = newPos;
 		// Remove old position from grid manager
-		var oldPos = Utilities.GetGridPosFromVector(this.Position);
 		GridManager.Instance.DeregisterAgent(oldPos);
 
-		// Move agent and add new position to grid manager
-		this.Position = Utilities.GetRealCoordinatesFromGridPos(gridPos);
+        foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(oldPos))
+        {
+            var agent = GridManager.Instance.GetAgent(neighbourTile.Key);
+            if (agent == null) continue;
+            if (agent.Team == Team)
+            {
+                agent.InFormation = agent.CheckInFormation();
+            }
+        }
+
+        // Move agent and add new position to grid manager
+        this.Position = Utilities.GetRealCoordinatesFromGridPos(newPos);
 		CanMove = false;
-		GridManager.Instance.RegisterAgent(gridPos, this);
-	}
+		InFormation = CheckInFormation();
+        GridManager.Instance.RegisterAgent(newPos, this);
+
+        foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(newPos))
+		{
+			var agent = GridManager.Instance.GetAgent(neighbourTile.Key);
+			if (agent == null) continue;
+            if (agent.Team == Team)
+            {
+                agent.InFormation = agent.CheckInFormation();
+			}
+		}
+    }
 
 	public bool CheckInFormation()
 	{
