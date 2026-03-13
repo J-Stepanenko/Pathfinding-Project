@@ -182,7 +182,7 @@ public static class TileScorer
         }
         return bestTiles;
     }
-    private static Agent FindAttackTarget(Agent agent)
+    public static Agent FindAttackTarget(Agent agent)
 	{
 		var tiles = GridManager.Instance.Tiles;
 		var agents = GridManager.Instance.Agents;
@@ -210,7 +210,7 @@ public static class TileScorer
             }
         }
         if (target == null) return agent;
-        GD.Print("Agent:" + agent.Name + " targetting " + target.GridPosition + " cost: " + lowestCost);
+        GD.Print("Agent:" + agent.Name + " targetting " + target.Name + " at: " + target.GridPosition + " cost: " + lowestCost);
         return target;
 	}
 

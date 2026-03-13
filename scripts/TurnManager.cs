@@ -15,6 +15,7 @@ public partial class TurnManager : Node
 
 		Turn = 1;
 		TeamTurn = 1;
+
 		GD.Print("TurnManager loaded");
 	}
 
@@ -25,21 +26,7 @@ public partial class TurnManager : Node
 
 	public void EndTurn()
 	{
-	//  EmitSignal(SignalName.DoAITurn);
-		var agentsDict = GridManager.Instance.Agents;
-		var agentsValues = new List<Agent>();
-		foreach (var agent in agentsDict)
-		{
-			agentsValues.Add(agent.Value);
-		}
-		foreach(var agent in agentsValues)
-		{
-			agent.DoAIMove();
-		}
-        foreach (var agent in agentsValues)
-        {
-			agent.DoAICombat();
-        }
+		AIManager.Instance.DoAITurns();
         if (TeamTurn+1 > 2)
 		{
 			TeamTurn = 1;
@@ -48,10 +35,6 @@ public partial class TurnManager : Node
 		else
 		{
 			TeamTurn++;
-		}
-		foreach (var agent in agentsDict)
-		{
-			GD.Print(agent.Value.Name + " at " + agent.Key);
 		}
 		GD.Print("Turn: "+Turn);
 		GD.Print("Team: "+TeamTurn);
