@@ -26,9 +26,16 @@ public partial class InputManager : Node
 
 	public void SelectAgent(Agent agent)
 	{
-		DeselectAgent();
-		selectedAgent = agent;
-		agent.OnSelected();
+		if (selectedAgent != null && selectedAgent == agent)
+		{
+			DeselectAgent();
+		}
+		else
+		{
+			DeselectAgent();
+			selectedAgent = agent;
+			agent.OnSelected();
+		}
 	}
 
 	public void DeselectAgent()

@@ -80,7 +80,19 @@ public partial class AIManager : Node
                 {
                     agent.DoAICombat();
                 }
+                else
+                {
+                    foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition)) 
+                    {
+                        if (!GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, true))
+                        {
+                            // Do combat early if no friendly agents are capable of forming up, allowing other agents to go for different targets if enemy is killed
+                            agent.DoAICombat();
+                        }
+                    }
+                }
             }
+            // Only do combat after all agents move (unless specific exceptions) to benefit off formation bonuses as much as possible
             foreach (var agent in agentsValues)
             {
                 agent.DoAICombat();

@@ -310,4 +310,30 @@ public partial class GridManager : Node
 
 		return tiles;
     }
+
+    /// <summary>
+    /// Returns true if friendly agents can move to this tile on their turn.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="agent"></param>
+    /// <param name="onlyOutOfFormation">If true, only checks for agents that are out of formation</param>
+    /// <returns></returns>
+    public bool CheckForFriendlyAgentsThatCanMoveHere(Tile tile, Agent agent, bool onlyOutOfFormation)
+    {
+        var agents = GridManager.Instance.Agents;
+        foreach (var otherAgent in agents)
+        {
+            if (otherAgent.Value == agent) continue;
+            if (otherAgent.Value.Team != agent.Team) continue;
+
+            if (otherAgent.Value.CanMove && (!otherAgent.Value.InFormation || !onlyOutOfFormation))
+            {
+                GridManager.Instance.GetPath(otherAgent.Key, tile.GridPosition, out var cost);
+                if (cost == 0) continue;
+                if (cost > agent.MoveRange) continue;
+                else return true;
+            }
+        }
+        return false;
+    }
 }

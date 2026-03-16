@@ -10,18 +10,17 @@ public partial class Agent : Node2D
 	[Export] public int MoveRange;
 	[Export] public int Team;
 	[Export] public bool AIEnabled;
-	public Vector2I GridPosition;
+    [Export] public int Health;
+    public Vector2I GridPosition;
 	public bool CanMove;
 	public bool CanAttack;
 	public bool InFormation;
 	public AgentState State;
-	public int Health;
 
 	private List<Tile> reachableTiles = new();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Health = 100;
 		State = AgentState.Forming_up;
 		CanMove = true;
 		CanAttack = true;
@@ -180,8 +179,7 @@ public partial class Agent : Node2D
                     if (tile.IsBase && tile.BaseTeam == Team)
 					{
 						// Heal and end turn
-						Health = 100;
-						HealthChanged();
+						HealthChanged(100);
 						return;
 					}
 				}
@@ -220,21 +218,47 @@ public partial class Agent : Node2D
 				{
 					var agent = GridManager.Instance.GetAgent(neighbourTile.Key);
 					if (agent != null && agent.Team != Team)
-					{
-						CombatManager.Instance.ResolveCombat(this, agent);
-						CanAttack = false;
+                    {
+						if (State == AgentState.Retreating)
+						{
+							var doCombat = false;
+
+							var combatResult = CombatManager.Instance.SimulateCombat(this, agent, false);
+
+							// Check if this agent will not die and will do more than 10 damage in combat
+							if (combatResult[0][0] > 0 && combatResult[0][1] >= 10)
+							{
+								doCombat = true;
+							}
+
+                            doCombat = true;
+                            if (doCombat)
+							{
+								CombatManager.Instance.ResolveCombat(this, agent);
+								CanAttack = false;
+							}
+						}
+						else 
+						{
+							CombatManager.Instance.ResolveCombat(this, agent);
+							CanAttack = false; 
+						}
 					}
 				}
 			}
         }
 	}
 
-	public void HealthChanged()
+	public void HealthChanged(int amount)
 	{
+		Health += amount;
+		if (Health > 100) Health = 100;
+
 		var label = this.GetChild<Label>(1);
 		label.Text = Name + "\n" + Team + "\n" + Health;
 		if (Health <= 0)
 		{
+			// Kill agent
 			this.Visible = false;
 			GridManager.Instance.DeregisterAgent(GridPosition);
 		}

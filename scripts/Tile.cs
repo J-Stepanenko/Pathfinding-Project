@@ -43,6 +43,10 @@ public partial class Tile : Node2D
 		}
 		if (IsBase)
 		{
+			if (BaseTeam == -1)
+			{
+				throw new Exception("Base has no team set, location: " + GridPosition);
+			}
 			GridManager.Instance.RegisterBase(GridPosition, this);
 		}
 
