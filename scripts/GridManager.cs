@@ -45,6 +45,10 @@ public partial class GridManager : Node
 
 	public void RegisterTile(Vector2I gridPos, Tile tile)
 	{
+		if (Tiles.ContainsKey(gridPos))
+		{
+			throw new Exception("Grid position: " + gridPos + " attempted to register when already existing");
+		}
 		Tiles[gridPos] = tile;
 	}
 
@@ -62,8 +66,12 @@ public partial class GridManager : Node
 	}
 
 	public void RegisterAgent(Vector2I agentPos, Agent agent)
-	{
-		Agents[agentPos] = agent;
+    {
+        if (Agents.ContainsKey(agentPos))
+        {
+            throw new Exception("Agent grid position: " + agentPos + " attempted to register in already occupied position");
+        }
+        Agents[agentPos] = agent;
 	}
 
 	public bool DeregisterAgent(Vector2I agentPos)

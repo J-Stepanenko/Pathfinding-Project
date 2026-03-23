@@ -8,6 +8,7 @@ public partial class AIManager : Node
 	public static AIManager Instance { get; private set; }
 
     private bool BasicPathfindingEnabled = false;
+    private bool GeneticAlgorithmEnabled = false;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
@@ -20,11 +21,16 @@ public partial class AIManager : Node
 	{
         var pathfindingNode = (PathfindingToggler)GetNode("/root/Scene/PathfindingToggler");
         pathfindingNode.BasicPathfindingEnabled += SetPathfindingToBasic;
+        pathfindingNode.GeneticAlgorithmEnabled += SetGeneticAlgorithmEnabled;
     }
 
     private void SetPathfindingToBasic()
     {
         BasicPathfindingEnabled = true;
+    }
+    private void SetGeneticAlgorithmEnabled()
+    {
+        GeneticAlgorithmEnabled = true;
     }
 
     public void DoAITurns()
@@ -64,13 +70,25 @@ public partial class AIManager : Node
                             closest = tile;
                         }
                     }
-                    agent.MoveAgent(closest);
+                    agent.PathTowards(closest);
                     agent.DoAICombat();
                 }
             }
 		}
-		else
-		{
+        else if (GeneticAlgorithmEnabled)
+        {
+            foreach (var agent in agentsValues)
+            {
+                if (agent.AIEnabled && agent.CanMove && agent.Team == TurnManager.Instance.TeamTurn)
+                {
+                    agent.State = agent.CheckState();
+                    var tile = GeneticPathfinder.RunGA(agent);
+                    agent.PathTowards(tile.GridPosition);
+                }
+            }
+        }
+        else
+        {
             foreach (var agent in agentsValues)
             {
                 agent.DoAIMove();
@@ -82,7 +100,7 @@ public partial class AIManager : Node
                 }
                 else
                 {
-                    foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition)) 
+                    foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition))
                     {
                         if (!GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, true))
                         {
@@ -92,17 +110,17 @@ public partial class AIManager : Node
                     }
                 }
             }
-            // Only do combat after all agents move (unless specific exceptions) to benefit off formation bonuses as much as possible
-            foreach (var agent in agentsValues)
-            {
-                agent.DoAICombat();
-            }
-            foreach (var agent in agentsDict)
-            {
-                GD.Print(agent.Value.Name + " at " + agent.Key);
-            }
         }
-	}
+        // Only do combat after all agents move (unless specific exceptions) to benefit off formation bonuses as much as possible
+        foreach (var agent in agentsValues)
+        {
+            agent.DoAICombat();
+        }
+        foreach (var agent in agentsDict)
+        {
+            GD.Print(agent.Value.Name + " at " + agent.Key);
+        }
+    }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)

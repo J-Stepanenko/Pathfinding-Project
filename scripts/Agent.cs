@@ -113,7 +113,7 @@ public partial class Agent : Node2D
 		GD.Print(Name + " Deselected");
 	}
 
-	public void MoveAgent(Vector2I newPos)
+	private void MoveAgent(Vector2I newPos)
 	{
 		GD.Print(Name + " moving from " + GridPosition + " to " + newPos);
         var oldPos = GridPosition;
@@ -185,23 +185,7 @@ public partial class Agent : Node2D
 				}
 
 				var bestTile = TileScorer.FindBestTile(this, State);
-				var path = GridManager.Instance.GetPath(this.GridPosition, bestTile.GridPosition, MoveRange);
-				if (path.Count != 0)
-				{
-					for (var i = 0; i < path.Count; i++)
-					{
-						var tile = path[path.Count - 1 - i];
-						if (GridManager.Instance.CheckTileHasAgent(tile))
-						{
-							continue;
-						}
-						else
-						{
-							MoveAgent(tile);
-							break;
-						}
-					}
-				}
+				PathTowards(bestTile.GridPosition);
 				CanMove = false;
 				InFormation = CheckInFormation();
 			}
@@ -262,6 +246,32 @@ public partial class Agent : Node2D
 			this.Visible = false;
 			GridManager.Instance.DeregisterAgent(GridPosition);
 		}
+	}
+
+	public void PathTowards(Vector2I newPos)
+	{
+        var path = GridManager.Instance.GetPath(this.GridPosition, newPos, MoveRange);
+        if (path.Count != 0)
+        {
+            for (var i = 0; i < path.Count; i++)
+            {
+                var tile = path[path.Count - 1 - i];
+                if (GridManager.Instance.CheckTileHasAgent(tile))
+                {
+                    continue;
+                }
+                else
+                {
+                    MoveAgent(tile);
+                    break;
+                }
+            }
+        }
+    }
+
+	public AgentState CheckState()
+	{
+		return AgentStateManager.Instance.CalculateState(this);
 	}
 
 	public void Attack(Agent defender)

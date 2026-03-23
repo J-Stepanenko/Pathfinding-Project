@@ -76,7 +76,7 @@ public partial class InputManager : Node
 			var newPos = Utilities.GetGridPosFromNode(tile);
 
 			var path = GridManager.Instance.GetPath(oldPos, newPos);
-			selectedAgent.MoveAgent(newPos);
+			selectedAgent.PathTowards(newPos);
 
 			DeselectAgent();
 			foreach (var point in path)

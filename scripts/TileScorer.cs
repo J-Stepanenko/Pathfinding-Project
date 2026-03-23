@@ -243,7 +243,7 @@ public static class TileScorer
             }
         }
         if (target == null) return agent;
-        GD.Print("Agent:" + agent.Name + " targetting " + target.Name + " at: " + target.GridPosition + " cost: " + lowestCost);
+        // GD.Print("Agent:" + agent.Name + " targetting " + target.Name + " at: " + target.GridPosition + " cost: " + lowestCost);
         return target;
 	}
 
@@ -638,5 +638,28 @@ public static class TileScorer
         GD.Print("Score for forming: " + formingUp);
         GD.Print("Score for chasing: " + chasing);
         GD.Print("Score for retreating: " + retreating);
+    }
+
+    public static int GetScoreForTile(Vector2I tilePos, Agent agent)
+    {
+        var tile = GridManager.Instance.GetTile(tilePos);
+        var score = 0;
+        var target = FindAttackTarget(agent);
+        switch (agent.State)
+        {
+            case AgentState.Attacking:
+                score = ScoreTileAttacking(tile, agent, target.GridPosition);
+                break;
+            case AgentState.Forming_up:
+                score = ScoreTileFormingUp(tile, agent);
+                break;
+            case AgentState.Chasing:
+                score = ScoreTileChasing(tile, agent, target.GridPosition);
+                break;
+            case AgentState.Retreating:
+                score = ScoreTileRetreating(tile, agent);
+                break;
+        }
+        return score;
     }
 }
