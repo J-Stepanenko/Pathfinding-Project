@@ -213,7 +213,7 @@ public partial class Agent : Node2D
 						{
 							var doCombat = false;
 
-							var combatResult = CombatManager.Instance.SimulateCombat(this, agent, false);
+							var combatResult = CombatManager.Instance.SimulateCombat(this, agent);
 
 							// Check if this agent will not die and will do more than 10 damage in combat
 							if (combatResult[0][0] > 0 && combatResult[0][1] >= 10)

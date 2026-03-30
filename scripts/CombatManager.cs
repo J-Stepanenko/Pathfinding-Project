@@ -26,7 +26,7 @@ public partial class CombatManager : Node
 	public void ResolveCombat(Agent attacker, Agent defender)
 	{
 		var rng = new Random();
-		double attackerDamage = Math.Max((attacker.Health / 2) * (attacker.CheckInFormation()? FormationAttBonus : 1) + rng.Next(-5, 6), 5);
+		double attackerDamage = Math.Max((attacker.Health / 2) * (attacker.CheckInFormation()? FormationAttBonus : 1), 5);
 		double defenderDefense = defender.InFormation? FormationDefBonus : 1;
 		switch (GridManager.Instance.GetTile(defender.GridPosition).Terrain)
 		{
@@ -53,7 +53,7 @@ public partial class CombatManager : Node
 
 		if (defender.Health > 0)
 		{
-			defenderDamage = Math.Max((defender.Health / 2) * (defender.CheckInFormation() ? FormationAttBonus : 1) + rng.Next(-5, 6), 5);
+			defenderDamage = Math.Max((defender.Health / 2) * (defender.CheckInFormation() ? FormationAttBonus : 1), 5);
 			switch (GridManager.Instance.GetTile(attacker.GridPosition).Terrain)
 			{
 				case TileTerrain.Plains:
@@ -85,11 +85,10 @@ public partial class CombatManager : Node
     /// <param name="attacker"></param>
     /// <param name="defender"></param>
     /// <returns>2D Array in form [AgentIndex[NewHealth, Damage]], in order of attacker then defender.</returns>
-	public int[][] SimulateCombat(Agent attacker, Agent defender, bool useRNG) 
+	public int[][] SimulateCombat(Agent attacker, Agent defender) 
 	{
         var rng = new Random();
-        double attackerDamage = Math.Max((attacker.Health / 2) * (attacker.CheckInFormation() ? FormationAttBonus : 1)
-            + (useRNG? rng.Next(-5, 6) : 0), 5);
+        double attackerDamage = Math.Max((attacker.Health / 2) * (attacker.CheckInFormation() ? FormationAttBonus : 1), 5);
         double defenderDefense = defender.InFormation ? FormationDefBonus : 1;
         switch (GridManager.Instance.GetTile(defender.GridPosition).Terrain)
         {
@@ -116,8 +115,7 @@ public partial class CombatManager : Node
 
         if (simulatedDefenderHealth > 0)
         {
-            defenderDamage = Math.Max((simulatedDefenderHealth / 2) * (defender.CheckInFormation() ? FormationAttBonus : 1)
-            + (useRNG ? rng.Next(-5, 6) : 0), 5);
+            defenderDamage = Math.Max((simulatedDefenderHealth / 2) * (defender.CheckInFormation() ? FormationAttBonus : 1), 5);
             switch (GridManager.Instance.GetTile(attacker.GridPosition).Terrain)
             {
                 case TileTerrain.Plains:
