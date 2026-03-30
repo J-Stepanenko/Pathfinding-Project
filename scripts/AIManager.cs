@@ -49,7 +49,8 @@ public partial class AIManager : Node
             {
                 if (agent.AIEnabled && agent.Team == TurnManager.Instance.TeamTurn)
                 {
-                    var target = TileScorer.FindAttackTarget(agent);
+                    var tileScorer = new TileScorer(GridManager.Instance.Agents);
+                    var target = tileScorer.FindAttackTarget(agent);
                     Vector2I closest = agent.GridPosition;
                     int lowestCost = -1;
                     foreach (var neighbour in GridManager.Instance.GetNeighbourTiles(target.GridPosition))
@@ -77,13 +78,22 @@ public partial class AIManager : Node
 		}
         else if (GeneticAlgorithmEnabled)
         {
+            var agentsToBeMoved = new List<Agent>();
             foreach (var agent in agentsValues)
             {
+                agent.TryHeal();
                 if (agent.AIEnabled && agent.CanMove && agent.Team == TurnManager.Instance.TeamTurn)
                 {
+                    agentsToBeMoved.Add(agent);
                     agent.State = agent.CheckState();
-                    var tile = GeneticPathfinder.RunGA(agent);
-                    agent.PathTowards(tile.GridPosition);
+                }
+            }
+            if (agentsToBeMoved.Count > 0)
+            {
+                var result = GeneticPathfinder.RunGA(agentsToBeMoved);
+                foreach (var (pos, agent) in result)
+                {
+                    agent.PathTowards(pos);
                 }
             }
         }

@@ -91,7 +91,8 @@ public partial class InputManager : Node
 	}
 
 	public void TileSelectedRight(Tile tile)
-	{
-		TileScorer.ScoreTileManually(selectedAgent, tile);
+    {
+        var tileScorer = new TileScorer(GridManager.Instance.Agents);
+        tileScorer.ScoreTileManually(selectedAgent, tile);
 	}
 }

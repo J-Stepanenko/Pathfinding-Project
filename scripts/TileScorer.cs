@@ -4,9 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public static class TileScorer
+public class TileScorer
 {
-	public static Tile FindBestTile(Agent agent, AgentState state)
+    Dictionary<Vector2I, Agent> Agents;
+    public TileScorer(Dictionary<Vector2I, Agent> agents)
+    {
+        Agents = agents;
+    }
+	public Tile FindBestTile(Agent agent, AgentState state)
 	{
 		Dictionary<Vector2I, Tile> bestTiles = new Dictionary<Vector2I, Tile>();
 		switch (state)
@@ -51,7 +56,7 @@ public static class TileScorer
 
 	}
 
-	private static Dictionary<Vector2I, Tile> FindBestAttackTiles(Agent agent)
+	private Dictionary<Vector2I, Tile> FindBestAttackTiles(Agent agent)
     {
         Dictionary<Vector2I, Tile> bestTiles = new Dictionary<Vector2I, Tile>();
         bestTiles.Add(agent.GridPosition, GridManager.Instance.GetTile(agent.GridPosition));
@@ -99,7 +104,7 @@ public static class TileScorer
 
         return bestTiles;
 	}
-    private static Dictionary<Vector2I, Tile> FindBestFormingUpTiles(Agent agent)
+    private Dictionary<Vector2I, Tile> FindBestFormingUpTiles(Agent agent)
     {
         Dictionary<Vector2I, Tile> bestTiles = new Dictionary<Vector2I, Tile>();
         bestTiles.Add(agent.GridPosition, GridManager.Instance.GetTile(agent.GridPosition));
@@ -156,7 +161,7 @@ public static class TileScorer
         return bestTiles;
     }
 
-    private static Dictionary<Vector2I, Tile> FindBestChasingTiles(Agent agent)
+    private Dictionary<Vector2I, Tile> FindBestChasingTiles(Agent agent)
     {
         Dictionary<Vector2I, Tile> bestTiles = new Dictionary<Vector2I, Tile>();
         bestTiles.Add(agent.GridPosition, GridManager.Instance.GetTile(agent.GridPosition));
@@ -186,7 +191,7 @@ public static class TileScorer
         }
         return bestTiles;
     }
-    private static Dictionary<Vector2I, Tile> FindBestRetreatingTiles(Agent agent)
+    private Dictionary<Vector2I, Tile> FindBestRetreatingTiles(Agent agent)
     {
         Dictionary<Vector2I, Tile> bestTiles = new Dictionary<Vector2I, Tile>();
         bestTiles.Add(agent.GridPosition, GridManager.Instance.GetTile(agent.GridPosition));
@@ -215,27 +220,35 @@ public static class TileScorer
         }
         return bestTiles;
     }
-    public static Agent FindAttackTarget(Agent agent)
-	{
-		var tiles = GridManager.Instance.Tiles;
-		var agents = GridManager.Instance.Agents;
-		var lowestCost = -1;
-		Agent target = null;
+    public Agent FindAttackTarget(Agent agent, Vector2I? agentPosition = null)
+    {
+        Vector2I agentPos;
+        if (agentPosition == null)
+        {
+            agentPos = agent.GridPosition;
+        }
+        else
+        {
+            agentPos = agentPosition.Value;
+        }
+        var agents = Agents;
+        var lowestCost = -1;
+        Agent target = null;
 
-		foreach (var possibleTarget in agents)
-		{
-			if (possibleTarget.Value.Team == TurnManager.Instance.TeamTurn)
-			{
-				continue;
-			}
+        foreach (var possibleTarget in agents)
+        {
+            if (possibleTarget.Value.Team == TurnManager.Instance.TeamTurn)
+            {
+                continue;
+            }
             foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(possibleTarget.Key))
             {
-				var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key);
-				if (neighbourAgent != null) continue;
+                var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key, agents);
+                if (neighbourAgent != null) continue;
 
                 // Get neighbours as tile with agent is disabled in A*
-                GridManager.Instance.GetPath(agent.GridPosition, neighbourTile.Key, out var cost); 
-				if (lowestCost == -1 || cost < lowestCost)
+                GridManager.Instance.GetPath(agentPos, neighbourTile.Key, out var cost);
+                if (lowestCost == -1 || cost < lowestCost)
                 {
                     lowestCost = cost;
                     target = possibleTarget.Value;
@@ -245,13 +258,22 @@ public static class TileScorer
         if (target == null) return agent;
         // GD.Print("Agent:" + agent.Name + " targetting " + target.Name + " at: " + target.GridPosition + " cost: " + lowestCost);
         return target;
-	}
+    }
 
-	private static int ScoreTileAttacking(Tile tile, Agent agent, Vector2I targetPos)
-	{
-		if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition))
+    private int ScoreTileAttacking(Tile tile, Agent agent, Vector2I targetPos, Vector2I? agentPosition = null)
+    {
+        Vector2I agentPos;
+        if (agentPosition == null)
+        {
+            agentPos = agent.GridPosition;
+        }
+        else
+        {
+            agentPos = agentPosition.Value;
+        }
+        if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition, Agents))
 		{
-			if (tile.GridPosition != agent.GridPosition) 
+			if (tile.GridPosition != agentPos) 
 			{ 
 				return 0;
 			}
@@ -264,7 +286,7 @@ public static class TileScorer
 
         foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(tile.GridPosition))
         {
-			var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key);
+			var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key, Agents);
 			if (neighbourAgent == null) continue;
 
             if (neighbourTile.Key == targetPos)
@@ -320,18 +342,27 @@ public static class TileScorer
 		return score;
 	}
 
-	private static int ScoreTileFormingUp(Tile tile, Agent agent)
-	{
-		if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition))
+	private int ScoreTileFormingUp(Tile tile, Agent agent, Vector2I? agentPosition = null)
+    {
+        Vector2I agentPos;
+        if (agentPosition == null)
+        {
+            agentPos = agent.GridPosition;
+        }
+        else
+        {
+            agentPos = agentPosition.Value;
+        }
+        if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition, Agents))
 		{
 			return 0;
 		}
-		var tiles = GridManager.Instance.GetReachableTiles(agent.GridPosition, agent.MoveRange);
+		var tiles = GridManager.Instance.GetReachableTiles(agentPos, agent.MoveRange);
 
 		var score = 0;
         foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(tile.GridPosition))
         {
-			var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key);
+			var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key, Agents);
 
 			if (neighbourAgent == null) continue;
 			if (neighbourAgent.Team == agent.Team && neighbourAgent != agent)
@@ -346,13 +377,13 @@ public static class TileScorer
                 }
             }
         }
-        var agents = GridManager.Instance.Agents;
+        var agents = Agents;
         // Check if a friendly agent that isn't in formation can move to a neighbour tile
         if (score == 0)
 		{
             foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(tile.GridPosition))
             {
-                if (GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, true))
+                if (GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, true, Agents))
                 {
                     var enemyAgentNearby = false;
                     foreach (var otherAgent in agents)
@@ -392,7 +423,7 @@ public static class TileScorer
 
                 foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(otherAgent.Key))
                 {
-                    GridManager.Instance.GetPath(agent.GridPosition, neighbourTile.Key, out var oldCost);
+                    GridManager.Instance.GetPath(agentPos, neighbourTile.Key, out var oldCost);
                     GridManager.Instance.GetPath(tile.GridPosition, neighbourTile.Key, out var newCost);
                     var costDifference = oldCost - newCost;
                     if (costDifference > scoredAgents[otherAgent.Value])
@@ -420,7 +451,7 @@ public static class TileScorer
                     }
                 }
 			}
-			GridManager.Instance.GetPath(agent.GridPosition, tile.GridPosition, out var cost);
+			GridManager.Instance.GetPath(agentPos, tile.GridPosition, out var cost);
 
             // Limit score gain from going closer to enemies at long distance
             if (scoredAgents.Count > 0)
@@ -451,13 +482,22 @@ public static class TileScorer
 		}
 		return score;
 	}
-	private static int ScoreTileChasing(Tile tile, Agent agent, Vector2I targetPos)
-	{
-		if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition))
+	private int ScoreTileChasing(Tile tile, Agent agent, Vector2I targetPos, Vector2I? agentPosition = null)
+    {
+        Vector2I agentPos;
+        if (agentPosition == null)
+        {
+            agentPos = agent.GridPosition;
+        }
+        else
+        {
+            agentPos = agentPosition.Value;
+        }
+        if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition, Agents))
 		{
 			return 0;
 		}
-		var agents = GridManager.Instance.Agents;
+		var agents = Agents;
 
 		var score = 0;
 
@@ -469,7 +509,7 @@ public static class TileScorer
             scoredAgents.Add(otherAgent.Value, -1);
             foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(otherAgent.Key))
             {
-                GridManager.Instance.GetPath(agent.GridPosition, neighbourTile.Key, out var oldCost);
+                GridManager.Instance.GetPath(agentPos, neighbourTile.Key, out var oldCost);
                 GridManager.Instance.GetPath(tile.GridPosition, neighbourTile.Key, out var newCost);
 
                 var costDifference = oldCost - newCost;
@@ -501,13 +541,13 @@ public static class TileScorer
                     var canReach = false;
                     foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(tile.GridPosition))
                     {
-                        if (GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, false))
+                        if (GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, false, Agents))
                         {
                             canReach = true;
                         }
                         else
                         {
-                            var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key);
+                            var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key, Agents);
                             if (neighbourAgent != null && neighbourAgent.Team == agent.Team)
                             {
                                 canReach = true;
@@ -550,9 +590,18 @@ public static class TileScorer
         }
 		return score;
 	}
-    private static int ScoreTileRetreating(Tile tile, Agent agent)
+    private int ScoreTileRetreating(Tile tile, Agent agent, Vector2I? agentPosition = null)
     {
-        if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition))
+        Vector2I agentPos;
+        if (agentPosition == null)
+        {
+            agentPos = agent.GridPosition;
+        }
+        else
+        {
+            agentPos = agentPosition.Value;
+        }
+        if (GridManager.Instance.CheckTileHasAgent(tile.GridPosition, Agents))
         {
             return 0;
         }
@@ -566,11 +615,11 @@ public static class TileScorer
 			bases = GridManager.Instance.Team2Bases;
 		}
 
-		var agents = GridManager.Instance.Agents;
+		var agents = Agents;
 
         var score = 0;
         if (tile.IsBase && GridManager.Instance
-            .GetReachableTiles(agent.GridPosition, agent.MoveRange)
+            .GetReachableTiles(agentPos, agent.MoveRange)
             .Contains(tile))
         {
             score = 100;
@@ -580,7 +629,7 @@ public static class TileScorer
             Dictionary<Agent, int> scoredAgents = new Dictionary<Agent, int>();
             foreach (var _base in bases)
             {
-                GridManager.Instance.GetPath(agent.GridPosition, _base.Key, out var oldCost);
+                GridManager.Instance.GetPath(agentPos, _base.Key, out var oldCost);
                 GridManager.Instance.GetPath(tile.GridPosition, _base.Key, out var newCost);
                 score += (oldCost - newCost) * 6;
             }
@@ -591,7 +640,7 @@ public static class TileScorer
                 scoredAgents.Add(otherAgent.Value, -1);
                 foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(otherAgent.Key))
                 {
-                    GridManager.Instance.GetPath(agent.GridPosition, neighbourTile.Key, out var oldCost);
+                    GridManager.Instance.GetPath(agentPos, neighbourTile.Key, out var oldCost);
                     GridManager.Instance.GetPath(tile.GridPosition, neighbourTile.Key, out var newCost);
 
                     var costDifference = oldCost - newCost;
@@ -626,7 +675,7 @@ public static class TileScorer
         return score;
     }
 
-	public static void ScoreTileManually(Agent agent, Tile tile)
+	public void ScoreTileManually(Agent agent, Tile tile)
 	{
 		var target = FindAttackTarget(agent);
 		var attacking = ScoreTileAttacking(tile, agent, target.GridPosition);
@@ -640,7 +689,7 @@ public static class TileScorer
         GD.Print("Score for retreating: " + retreating);
     }
 
-    public static int GetScoreForTile(Vector2I tilePos, Agent agent)
+    public int GetScoreForTile(Vector2I tilePos, Agent agent)
     {
         var tile = GridManager.Instance.GetTile(tilePos);
         var score = 0;

@@ -34,7 +34,7 @@ public partial class AgentStateManager : Node
                 return AgentState.Attacking;
             }
 		}
-
+		GD.Print(agent.Name + " in formation: " + agent.InFormation);
 		// Then check all reachable tiles this turn
         AgentState? currentState = null;
         foreach (var tile in GridManager.Instance.GetReachableTiles(agent.GridPosition, agent.MoveRange))

@@ -155,42 +155,48 @@ public partial class Agent : Node2D
 			var agent = GridManager.Instance.GetAgent(neighbourTile.Key);
 			if (agent != null && agent.Team == Team) 
 			{
-                GD.Print(Name + " is in formation");
+                //GD.Print(Name + " is in formation");
                 return true;
             }
 		}
-        GD.Print(Name + " is not in formation");
+        //GD.Print(Name + " is not in formation");
 		return false;
     }
 
 	public void DoAIMove()
 	{
+		TryHeal();
 		if (AIEnabled)
-		{
-			if (CanMove && TurnManager.Instance.TeamTurn == this.Team)
+        {
+            if (CanMove && TurnManager.Instance.TeamTurn == this.Team)
 			{
 				InFormation = CheckInFormation();
 				State = AgentStateManager.Instance.CalculateState(this);
-                GD.Print("Agent: " + Name + " is in state: " + State + " at position: " + GridPosition);
-                if (State == AgentState.Retreating)
-				{
-					var tile = GridManager.Instance.GetTile(GridPosition);
 
-                    if (tile.IsBase && tile.BaseTeam == Team)
-					{
-						// Heal and end turn
-						HealthChanged(100);
-						return;
-					}
-				}
-
-				var bestTile = TileScorer.FindBestTile(this, State);
+                var tileScorer = new TileScorer(GridManager.Instance.Agents);
+                var bestTile = tileScorer.FindBestTile(this, State);
 				PathTowards(bestTile.GridPosition);
 				CanMove = false;
-				InFormation = CheckInFormation();
 			}
-		}
-	}
+        }
+        InFormation = CheckInFormation();
+    }
+
+	public void TryHeal()
+	{
+        if (State == AgentState.Retreating && CanMove && Health != 100 && TurnManager.Instance.TeamTurn == Team)
+        {
+            var tile = GridManager.Instance.GetTile(GridPosition);
+
+            if (tile.IsBase && tile.BaseTeam == Team)
+            {
+                // Heal and end turn
+                HealthChanged(100);
+                CanMove = false;
+                return;
+            }
+        }
+    }
 
 	public void DoAICombat()
 	{
@@ -271,7 +277,9 @@ public partial class Agent : Node2D
 
 	public AgentState CheckState()
 	{
-		return AgentStateManager.Instance.CalculateState(this);
+		var state = AgentStateManager.Instance.CalculateState(this);
+        GD.Print("Agent: " + Name + " is in state: " + State + " at position: " + GridPosition);
+        return state;
 	}
 
 	public void Attack(Agent defender)

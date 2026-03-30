@@ -14,6 +14,7 @@ public partial class GridManager : Node
     public Dictionary<Vector2I, Tile> Team2Bases = new();
     private Agent selectedAgent;
 	private AStar2D astar = new AStar2D();
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -86,15 +87,23 @@ public partial class GridManager : Node
 		return Tiles.TryGetValue(gridPos, out Tile tile) ? tile : null;
 	}
 
-	public Agent GetAgent(Vector2I agentPos)
+	public Agent GetAgent(Vector2I agentPos, Dictionary<Vector2I, Agent> agents = null)
 	{
-		return Agents.TryGetValue(agentPos, out Agent agent) ? agent : null;
+		if (agents == null)
+		{
+			agents = Agents;
+		}
+		return agents.TryGetValue(agentPos, out Agent agent) ? agent : null;
 	}
 
-	public bool CheckTileHasAgent(Vector2I gridPos)
-	{
-		if (!Tiles.ContainsKey(gridPos)) return false;
-		return Agents.ContainsKey(gridPos);
+	public bool CheckTileHasAgent(Vector2I gridPos, Dictionary<Vector2I, Agent> agents = null)
+    {
+        if (agents == null)
+        {
+            agents = Agents;
+        }
+        if (!Tiles.ContainsKey(gridPos)) return false;
+		return agents.ContainsKey(gridPos);
 	}
 
 	public bool CheckTileIsNeighbour(Vector2I tile1Pos, Vector2I tile2Pos)
@@ -326,9 +335,12 @@ public partial class GridManager : Node
     /// <param name="agent"></param>
     /// <param name="onlyOutOfFormation">If true, only checks for agents that are out of formation</param>
     /// <returns></returns>
-    public bool CheckForFriendlyAgentsThatCanMoveHere(Tile tile, Agent agent, bool onlyOutOfFormation)
+    public bool CheckForFriendlyAgentsThatCanMoveHere(Tile tile, Agent agent, bool onlyOutOfFormation, Dictionary<Vector2I, Agent> agents = null)
     {
-        var agents = GridManager.Instance.Agents;
+        if (agents == null)
+        {
+            agents = Agents;
+        }
         foreach (var otherAgent in agents)
         {
             if (otherAgent.Value == agent) continue;
@@ -336,7 +348,7 @@ public partial class GridManager : Node
 
             if (otherAgent.Value.CanMove && (!otherAgent.Value.InFormation || !onlyOutOfFormation))
             {
-                GridManager.Instance.GetPath(otherAgent.Key, tile.GridPosition, out var cost);
+                GetPath(otherAgent.Key, tile.GridPosition, out var cost);
                 if (cost == 0) continue;
                 if (cost > agent.MoveRange) continue;
                 else return true;
