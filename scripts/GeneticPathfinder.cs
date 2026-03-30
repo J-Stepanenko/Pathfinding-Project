@@ -24,6 +24,27 @@ public static partial class GeneticPathfinder
                 tilesArray.Add(tile.Key);
             }
         }
+		// Always add bases to population if retreating
+		if (agent.State == AgentState.Retreating)
+		{
+			if (agent.Team == 1)
+			{
+				foreach (var tile in GridManager.Instance.Team1Bases)
+				{
+					selectedTiles.Add(tile.Key, FindFitness(tile.Key, agent, GridManager.Instance.Agents));
+					indexes.Add(tilesArray.IndexOf(tile.Key));
+
+                }
+            }
+            if (agent.Team == 2)
+            {
+                foreach (var tile in GridManager.Instance.Team2Bases)
+                {
+                    selectedTiles.Add(tile.Key, FindFitness(tile.Key, agent, GridManager.Instance.Agents));
+                    indexes.Add(tilesArray.IndexOf(tile.Key));
+                }
+            }
+        }
         for (var i = 1; i <= PopulationSize; i++)
 		{
 			if (i >= tilesArray.Count) break;
