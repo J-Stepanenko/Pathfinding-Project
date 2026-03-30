@@ -3,10 +3,12 @@ using System;
 
 public partial class PathfindingToggler : Node
 {
-	[Export] bool BasicPathfinding = false;
-	[Export] bool GeneticAlgorithm = false;
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	[Export] bool Team1BasicPathfinding = false;
+    [Export] bool Team1GeneticAlgorithm = false;
+    [Export] bool Team2BasicPathfinding = false;
+    [Export] bool Team2GeneticAlgorithm = false;
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
 	{
 		CallDeferred(nameof(Init));
 	}
@@ -18,18 +20,32 @@ public partial class PathfindingToggler : Node
 
 	private void Init()
 	{
-		if (BasicPathfinding)
+		if (Team1BasicPathfinding)
 		{
-			EmitSignal(SignalName.BasicPathfindingEnabled);
-		}
-		if (GeneticAlgorithm)
+			EmitSignal(SignalName.Team1BasicPathfindingEnabled);
+        }
+        if (Team2BasicPathfinding)
+        {
+            EmitSignal(SignalName.Team2BasicPathfindingEnabled);
+        }
+        if (Team1GeneticAlgorithm)
 		{
-			EmitSignal(SignalName.GeneticAlgorithmEnabled);
-		}
-	}
+			EmitSignal(SignalName.Team1GeneticAlgorithmEnabled);
+        }
+        if (Team2GeneticAlgorithm)
+        {
+            EmitSignal(SignalName.Team2GeneticAlgorithmEnabled);
+        }
+    }
     [Signal]
-    public delegate void BasicPathfindingEnabledEventHandler();
+    public delegate void Team1BasicPathfindingEnabledEventHandler();
 
     [Signal]
-    public delegate void GeneticAlgorithmEnabledEventHandler();
+    public delegate void Team2BasicPathfindingEnabledEventHandler();
+
+    [Signal]
+    public delegate void Team1GeneticAlgorithmEnabledEventHandler();
+
+    [Signal]
+    public delegate void Team2GeneticAlgorithmEnabledEventHandler();
 }
