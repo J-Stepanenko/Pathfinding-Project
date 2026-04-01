@@ -79,6 +79,12 @@ public partial class ScoreManager : Node
 		return mult;
 	}
 
+	/// <summary>
+	/// Adds and stores the difference between the test tile (the tile that actually has been selected) against the control tile (the ideal tile to move to according to TileScorer)
+	/// </summary>
+	/// <param name="testTile"></param>
+	/// <param name="controlTile"></param>
+	/// <param name="agent"></param>
 	public void AddVariance(Vector2I testTile, Vector2I controlTile, Agent agent)
 	{
 		var variance = Math.Abs(testTile.X - controlTile.X) + Math.Abs(testTile.Y - controlTile.Y);

@@ -77,7 +77,6 @@ public partial class GridManager : Node
 
 	public bool DeregisterAgent(Vector2I agentPos)
 	{
-		GD.Print(GetAgent(agentPos).Name + " Deregistered");
 		SetTileOccupied(agentPos, false);
 		return Agents.Remove(agentPos);
 	}

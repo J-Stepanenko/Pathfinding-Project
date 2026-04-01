@@ -167,8 +167,6 @@ public static partial class GeneticPathfinder
         var maxGridSize = new Vector2I(maxGridX, maxGridY);
 
 		var maxMoveRange = agentsToBeMoved[0].MoveRange;
-
-		GD.Print("Agents to be moved count: " + agentsToBeMoved.Count);
         for (int i = 1; i <= Generations; i++)
         {
 			GD.Print("Generation " + i);
@@ -260,7 +258,6 @@ public static partial class GeneticPathfinder
                         GD.Print("Best tile: " + bestTile + " score " + bestTileScore);
                         GD.Print("Last tile in path: " + path.Last());
                         GD.Print("Path tile: " + pathTile);
-                        GD.Print("try get: " + newAgentPositions.TryGetValue(pathTile, out _) + " path tile: " + pathTile);
 						// If tile is not occupied
                         if (!newAgentPositions.TryGetValue(pathTile, out _))
 						{
@@ -332,13 +329,8 @@ public static partial class GeneticPathfinder
                 {
 					var tempScorer = new TileScorer(GridManager.Instance.Agents);
                     ScoreManager.Instance.AddScore(agent, bestTileScore);
-
-					//var bestTileControl = tempScorer.FindBestTile(agent).GridPosition;
-					//var controlPath = GridManager.Instance.GetPath(agent.GridPosition, bestTileControl, maxMoveRange);
-     //               ScoreManager.Instance.AddVariance(bestTile, controlPath.Last(), agent);
                 }
 
-                GD.Print(agent.Name + "Adding best tile to dict: " + bestTile);
 				newAgentPositions.Remove(previousPos);
 				agentMoves.Remove(agent);
 

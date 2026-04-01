@@ -155,11 +155,9 @@ public partial class Agent : Node2D
 			var agent = GridManager.Instance.GetAgent(neighbourTile.Key);
 			if (agent != null && agent.Team == Team) 
 			{
-                //GD.Print(Name + " is in formation");
                 return true;
             }
 		}
-        //GD.Print(Name + " is not in formation");
 		return false;
     }
 
