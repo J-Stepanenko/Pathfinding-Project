@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://y53jmtqacq1"]
+[gd_scene load_steps=5 format=3 uid="uid://y53jmtqacq1"]
 
 [ext_resource type="PackedScene" uid="uid://ce2oqp1oeti70" path="res://scenes/tiles/plains_tile.tscn" id="1_ypgl4"]
+[ext_resource type="PackedScene" uid="uid://cepmb8sai6hrj" path="res://scenes/tiles/base_tile.tscn" id="2_gkfl6"]
+[ext_resource type="PackedScene" uid="uid://b6hq8viqx6ytt" path="res://scenes/tiles/mountain_tile.tscn" id="3_o37r7"]
 [ext_resource type="PackedScene" uid="uid://3angrksctdgc" path="res://scenes/agent.tscn" id="5_08pjf"]
 
 [node name="Map" type="Node2D"]
@@ -127,9 +129,6 @@ position = Vector2(250, 350)
 [node name="Plains_Tile40" parent="Tiles" instance=ExtResource("1_ypgl4")]
 position = Vector2(150, 350)
 
-[node name="Plains_Tile41" parent="Tiles" instance=ExtResource("1_ypgl4")]
-position = Vector2(50, 350)
-
 [node name="Plains_Tile42" parent="Tiles" instance=ExtResource("1_ypgl4")]
 position = Vector2(250, 250)
 
@@ -181,9 +180,6 @@ position = Vector2(650, 450)
 [node name="Plains_Tile60" parent="Tiles" instance=ExtResource("1_ypgl4")]
 position = Vector2(450, 450)
 
-[node name="Plains_Tile61" parent="Tiles" instance=ExtResource("1_ypgl4")]
-position = Vector2(350, 350)
-
 [node name="Plains_Tile62" parent="Tiles" instance=ExtResource("1_ypgl4")]
 position = Vector2(750, 350)
 
@@ -226,14 +222,14 @@ position = Vector2(750, 150)
 [node name="Plains_Tile75" parent="Tiles" instance=ExtResource("1_ypgl4")]
 position = Vector2(850, 150)
 
-[node name="Plains_Tile76" parent="Tiles" instance=ExtResource("1_ypgl4")]
-position = Vector2(550, 150)
-
 [node name="Plains_Tile77" parent="Tiles" instance=ExtResource("1_ypgl4")]
 position = Vector2(650, 150)
 
 [node name="Plains_Tile78" parent="Tiles" instance=ExtResource("1_ypgl4")]
 position = Vector2(450, 150)
+
+[node name="Plains_Tile85" parent="Tiles" instance=ExtResource("1_ypgl4")]
+position = Vector2(550, 150)
 
 [node name="Plains_Tile79" parent="Tiles" instance=ExtResource("1_ypgl4")]
 position = Vector2(350, 50)
@@ -259,25 +255,25 @@ position = Vector2(1050, 350)
 [node name="Plains_Tile52" parent="Tiles" instance=ExtResource("1_ypgl4")]
 position = Vector2(950, 350)
 
+[node name="Base_Tile" parent="Tiles" instance=ExtResource("2_gkfl6")]
+position = Vector2(50, 350)
+BaseTeam = 2
+
+[node name="Mountain_Tile" parent="Tiles" instance=ExtResource("3_o37r7")]
+position = Vector2(350, 350)
+
 [node name="Characters" type="Node" parent="."]
 
-[node name="Agent" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(250, 550)
-Team = 1
-
 [node name="Agent6" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(150, 150.00003)
-Team = 1
-
-[node name="Agent3" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(449.99997, 550)
+position = Vector2(350, 350)
 Team = 1
 
 [node name="Agent4" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(949.99994, 150.00002)
+position = Vector2(150, 350)
 Team = 2
 AIEnabled = true
 
 [node name="Agent5" parent="Characters" instance=ExtResource("5_08pjf")]
-position = Vector2(350.00006, 150.00003)
-Team = 1
+position = Vector2(350, 550)
+Team = 2
+AIEnabled = true

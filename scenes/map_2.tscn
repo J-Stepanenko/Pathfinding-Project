@@ -256,12 +256,10 @@ position = Vector2(950, 350)
 
 [node name="Base_Tile" parent="Tiles" instance=ExtResource("2_a7y6p")]
 position = Vector2(50, 350)
-IsBase = true
 BaseTeam = 1
 
 [node name="Base_Tile2" parent="Tiles" instance=ExtResource("2_a7y6p")]
 position = Vector2(1150, 350)
-IsBase = true
 BaseTeam = 2
 
 [node name="Characters" type="Node" parent="."]
@@ -275,11 +273,11 @@ position = Vector2(1050, 550)
 Team = 2
 AIEnabled = true
 
+[node name="Agent4" parent="Characters" instance=ExtResource("5_kocsa")]
+position = Vector2(1050, 150.00003)
+Team = 2
+AIEnabled = true
+
 [node name="Agent3" parent="Characters" instance=ExtResource("5_kocsa")]
 position = Vector2(150, 150.00003)
 Team = 1
-
-[node name="Agent4" parent="Characters" instance=ExtResource("5_kocsa")]
-position = Vector2(1050, 150)
-Team = 2
-AIEnabled = true

@@ -1,0 +1,570 @@
+[gd_scene load_steps=7 format=3 uid="uid://bbth7e5pg5blu"]
+
+[ext_resource type="PackedScene" uid="uid://ce2oqp1oeti70" path="res://scenes/tiles/plains_tile.tscn" id="1_vbh2b"]
+[ext_resource type="PackedScene" uid="uid://cepmb8sai6hrj" path="res://scenes/tiles/base_tile.tscn" id="2_fh7ip"]
+[ext_resource type="PackedScene" uid="uid://b6hq8viqx6ytt" path="res://scenes/tiles/mountain_tile.tscn" id="2_rjptk"]
+[ext_resource type="PackedScene" uid="uid://c7whgch1att3u" path="res://scenes/tiles/forest_tile.tscn" id="3_8nvhf"]
+[ext_resource type="PackedScene" uid="uid://3angrksctdgc" path="res://scenes/agent.tscn" id="3_rjptk"]
+[ext_resource type="PackedScene" uid="uid://73l2j65eyfp2" path="res://scenes/tiles/river_tile.tscn" id="4_upn08"]
+
+[node name="Map" type="Node2D"]
+
+[node name="Tiles" type="Node" parent="."]
+
+[node name="Plains_Tile" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 50)
+
+[node name="Plains_Tile2" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 50)
+
+[node name="Plains_Tile3" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 150)
+
+[node name="Plains_Tile4" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 150)
+
+[node name="Plains_Tile9" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 450)
+
+[node name="Plains_Tile10" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 450)
+
+[node name="Plains_Tile11" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 550)
+
+[node name="Plains_Tile92" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 350)
+
+[node name="Plains_Tile13" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 550)
+
+[node name="Plains_Tile16" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 650)
+
+[node name="Plains_Tile17" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 650)
+
+[node name="Plains_Tile58" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 350)
+
+[node name="Plains_Tile61" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 250)
+
+[node name="Plains_Tile62" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 250)
+
+[node name="Plains_Tile85" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 850)
+
+[node name="Plains_Tile86" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 850)
+
+[node name="Plains_Tile89" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 950)
+
+[node name="Plains_Tile90" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 950)
+
+[node name="Plains_Tile111" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(150, 750)
+
+[node name="Plains_Tile121" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(50, 750)
+
+[node name="Plains_Tile18" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 250)
+
+[node name="Plains_Tile19" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 450)
+
+[node name="Plains_Tile20" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 550)
+
+[node name="Plains_Tile21" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(350, 450)
+
+[node name="Plains_Tile22" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(350, 350)
+
+[node name="Plains_Tile23" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(350, 150)
+
+[node name="Plains_Tile24" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(350, 50)
+
+[node name="Plains_Tile25" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(550, 50)
+
+[node name="Plains_Tile26" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(450, 50)
+
+[node name="Plains_Tile27" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(450, 150)
+
+[node name="Plains_Tile63" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 50)
+
+[node name="Plains_Tile69" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 350)
+
+[node name="Plains_Tile77" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 650)
+
+[node name="Plains_Tile83" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 150)
+
+[node name="Plains_Tile53" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 850)
+
+[node name="Plains_Tile91" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 950)
+
+[node name="Plains_Tile115" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(250, 750)
+
+[node name="Plains_Tile133" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1250, 50)
+
+[node name="Plains_Tile134" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1350, 50)
+
+[node name="Plains_Tile135" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1450, 50)
+
+[node name="Plains_Tile136" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 50)
+
+[node name="Plains_Tile137" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1650, 50)
+
+[node name="Plains_Tile138" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1250, 150)
+
+[node name="Plains_Tile139" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1350, 150)
+
+[node name="Plains_Tile140" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1450, 150)
+
+[node name="Plains_Tile141" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 150)
+
+[node name="Plains_Tile142" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1250, 250)
+
+[node name="Plains_Tile143" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1350, 250)
+
+[node name="Plains_Tile144" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1450, 250)
+
+[node name="Plains_Tile145" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 250)
+
+[node name="Plains_Tile147" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1250, 450)
+
+[node name="Plains_Tile149" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1250, 550)
+
+[node name="Plains_Tile153" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1350, 650)
+
+[node name="Plains_Tile154" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1450, 650)
+
+[node name="Plains_Tile155" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 650)
+
+[node name="Plains_Tile156" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1350, 550)
+
+[node name="Plains_Tile157" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1450, 550)
+
+[node name="Plains_Tile158" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 550)
+
+[node name="Plains_Tile160" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1650, 150)
+
+[node name="Plains_Tile161" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1650, 250)
+
+[node name="Plains_Tile162" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1650, 450)
+
+[node name="Plains_Tile182" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1650, 350)
+
+[node name="Plains_Tile163" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1650, 650)
+
+[node name="Plains_Tile181" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1650, 750)
+
+[node name="Plains_Tile168" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1250, 350)
+
+[node name="Plains_Tile170" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 450)
+
+[node name="Plains_Tile172" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1350, 450)
+
+[node name="Plains_Tile175" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 350)
+
+[node name="Plains_Tile178" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1250, 850)
+
+[node name="Plains_Tile180" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1250, 950)
+
+[node name="Plains_Tile183" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1050, 950)
+
+[node name="Plains_Tile184" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(950, 850)
+
+[node name="Plains_Tile187" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1350, 950)
+
+[node name="Plains_Tile188" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1450, 950)
+
+[node name="Plains_Tile189" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 950)
+
+[node name="Plains_Tile190" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1650, 950)
+
+[node name="Plains_Tile191" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1650, 850)
+
+[node name="Plains_Tile194" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1350, 750)
+
+[node name="Plains_Tile167" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(850, 50)
+
+[node name="Plains_Tile171" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(950, 50)
+
+[node name="Plains_Tile173" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(950, 150)
+
+[node name="Plains_Tile174" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(750, 850)
+
+[node name="Plains_Tile176" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(750, 950)
+
+[node name="Plains_Tile177" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(650, 950)
+
+[node name="Plains_Tile179" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(550, 950)
+
+[node name="Plains_Tile186" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(550, 850)
+
+[node name="Plains_Tile166" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1150, 50)
+
+[node name="Plains_Tile148" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1050, 150)
+
+[node name="Plains_Tile150" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1050, 250)
+
+[node name="Plains_Tile151" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1050, 450)
+
+[node name="Plains_Tile164" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1050, 550)
+
+[node name="Plains_Tile165" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1050, 650)
+
+[node name="Plains_Tile169" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1050, 350)
+
+[node name="Plains_Tile196" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1050, 750)
+
+[node name="Plains_Tile197" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 850)
+
+[node name="Plains_Tile198" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1450, 850)
+
+[node name="Plains_Tile199" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1350, 850)
+
+[node name="Plains_Tile202" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1550, 750)
+
+[node name="Plains_Tile203" parent="Tiles" instance=ExtResource("1_vbh2b")]
+position = Vector2(1450, 750)
+
+[node name="Mountain_Tile" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1050, 50)
+
+[node name="Mountain_Tile30" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1350, 350)
+
+[node name="Mountain_Tile4" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(650, 350)
+
+[node name="Mountain_Tile17" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(350, 250)
+
+[node name="Mountain_Tile18" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(350, 550)
+
+[node name="Mountain_Tile19" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(350, 750)
+
+[node name="Mountain_Tile20" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(350, 850)
+
+[node name="Mountain_Tile21" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(850, 950)
+
+[node name="Mountain_Tile22" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1150, 650)
+
+[node name="Mountain_Tile28" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1250, 650)
+
+[node name="Mountain_Tile29" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1250, 750)
+
+[node name="Mountain_Tile23" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1150, 850)
+
+[node name="Mountain_Tile24" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1150, 750)
+
+[node name="Mountain_Tile25" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1150, 450)
+
+[node name="Mountain_Tile26" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1150, 350)
+
+[node name="Mountain_Tile14" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(650, 250)
+
+[node name="Mountain_Tile15" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(750, 150)
+
+[node name="Mountain_Tile5" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(750, 350)
+
+[node name="Mountain_Tile7" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(750, 450)
+
+[node name="Mountain_Tile8" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(750, 550)
+
+[node name="Mountain_Tile9" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(650, 450)
+
+[node name="Mountain_Tile10" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(850, 650)
+
+[node name="Mountain_Tile11" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(750, 750)
+
+[node name="Mountain_Tile12" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(650, 750)
+
+[node name="Mountain_Tile6" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(850, 350)
+
+[node name="Mountain_Tile2" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1450, 350)
+
+[node name="Mountain_Tile3" parent="Tiles" instance=ExtResource("2_rjptk")]
+position = Vector2(1450, 450)
+
+[node name="Forest_Tile" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(750, 250)
+
+[node name="Forest_Tile2" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(650, 550)
+
+[node name="Forest_Tile3" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(650, 650)
+
+[node name="Forest_Tile4" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(750, 650)
+
+[node name="Forest_Tile5" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(850, 550)
+
+[node name="Forest_Tile18" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(1150, 550)
+
+[node name="Forest_Tile19" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(1150, 250)
+
+[node name="Forest_Tile20" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(1150, 150)
+
+[node name="Forest_Tile21" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(1150, 950)
+
+[node name="Forest_Tile22" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(1050, 850)
+
+[node name="Forest_Tile6" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(850, 450)
+
+[node name="Forest_Tile7" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(650, 150)
+
+[node name="Forest_Tile8" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(550, 250)
+
+[node name="Forest_Tile9" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(550, 350)
+
+[node name="Forest_Tile10" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(550, 450)
+
+[node name="Forest_Tile11" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(450, 550)
+
+[node name="Forest_Tile12" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(450, 650)
+
+[node name="Forest_Tile23" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(350, 650)
+
+[node name="Forest_Tile24" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(350, 950)
+
+[node name="Forest_Tile13" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(550, 750)
+
+[node name="Forest_Tile14" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(650, 850)
+
+[node name="Forest_Tile15" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(850, 750)
+
+[node name="Forest_Tile16" parent="Tiles" instance=ExtResource("3_8nvhf")]
+position = Vector2(850, 250)
+
+[node name="River_Tile" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(550, 550)
+
+[node name="River_Tile2" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(550, 650)
+
+[node name="River_Tile3" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(450, 750)
+
+[node name="River_Tile4" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(450, 850)
+
+[node name="River_Tile5" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(450, 950)
+
+[node name="River_Tile6" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(450, 450)
+
+[node name="River_Tile7" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(450, 350)
+
+[node name="River_Tile8" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(450, 250)
+
+[node name="River_Tile9" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(550, 150)
+
+[node name="River_Tile10" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(650, 50)
+
+[node name="River_Tile11" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(750, 50)
+
+[node name="River_Tile12" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(850, 150)
+
+[node name="River_Tile13" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(950, 250)
+
+[node name="River_Tile14" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(950, 350)
+
+[node name="River_Tile15" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(950, 450)
+
+[node name="River_Tile16" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(950, 550)
+
+[node name="River_Tile17" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(950, 650)
+
+[node name="River_Tile18" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(950, 750)
+
+[node name="River_Tile19" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(850, 850)
+
+[node name="River_Tile20" parent="Tiles" instance=ExtResource("4_upn08")]
+position = Vector2(950, 950)
+
+[node name="Base_Tile2" parent="Tiles" instance=ExtResource("2_fh7ip")]
+position = Vector2(1650, 550)
+BaseTeam = 2
+
+[node name="Characters" type="Node" parent="."]
+
+[node name="Agent6" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(150, 550)
+Team = 1
+
+[node name="Agent7" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(150, 650)
+Team = 1
+
+[node name="Agent8" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(150, 850)
+Team = 1
+
+[node name="Agent9" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(150, 350.00003)
+Team = 1
+
+[node name="Agent" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(1350, 650)
+Team = 2
+AIEnabled = true
+
+[node name="Agent2" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(1350, 250)
+Team = 2
+AIEnabled = true
+
+[node name="Agent3" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(1550, 550)
+Team = 2
+AIEnabled = true
+
+[node name="Agent4" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(1550, 950)
+Team = 2
+AIEnabled = true
+
+[node name="Agent5" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(1550, 150.00003)
+Team = 2
+AIEnabled = true
+
+[node name="Agent10" parent="Characters" instance=ExtResource("3_rjptk")]
+position = Vector2(150, 150.00003)
+Team = 1
