@@ -9,6 +9,9 @@ public partial class UI : Node
     {
         var endTurnButton = GetNode<Button>("End Turn Button");
         endTurnButton.Pressed += TurnManager.Instance.EndTurn;
+
+        var showScoreButton = GetNode<Button>("Show Final Scores Button");
+        showScoreButton.Pressed += ScoreManager.Instance.DisplayFinalScores;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

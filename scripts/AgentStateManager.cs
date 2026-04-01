@@ -1,6 +1,5 @@
 
 using Godot;
-using Godot.NativeInterop;
 
 public enum AgentState
 {
@@ -29,12 +28,11 @@ public partial class AgentStateManager : Node
 		foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition))
 		{
 			var neighbourAgent = GridManager.Instance.GetAgent(neighbourTile.Key);
-			if (neighbourAgent != null && neighbourAgent.Team != agent.Team)
+            if (neighbourAgent != null && neighbourAgent.Team != agent.Team)
 			{
                 return AgentState.Attacking;
             }
-		}
-		GD.Print(agent.Name + " in formation: " + agent.InFormation);
+        }
 		// Then check all reachable tiles this turn
         AgentState? currentState = null;
         foreach (var tile in GridManager.Instance.GetReachableTiles(agent.GridPosition, agent.MoveRange))
@@ -47,17 +45,17 @@ public partial class AgentStateManager : Node
 
 
                 if (tileAgent.Team != TurnManager.Instance.TeamTurn)
-				{
-					return AgentState.Attacking;
-				}
-				else
-				{
-					if (!agent.InFormation)
+                {
+                    return AgentState.Attacking;
+                }
+                else
+                {
+                    if (!agent.InFormation && tileAgent.State != AgentState.Retreating)
 					{
 						currentState = AgentState.Forming_up;
 					}
-				}
-			}
+                }
+            }
         }
         if (currentState != null) return (AgentState)currentState;
         // Then check all tiles reachable within 2 moves
@@ -71,9 +69,9 @@ public partial class AgentStateManager : Node
 
                 if (tileAgent.Team == TurnManager.Instance.TeamTurn)
                 {
-                    if (!tileAgent.InFormation && !agent.InFormation)
-					{
-						return AgentState.Forming_up;
+                    if (!tileAgent.InFormation && !agent.InFormation && tileAgent.State != AgentState.Retreating)
+                    {
+                        return AgentState.Forming_up;
 					}
 				}
             }

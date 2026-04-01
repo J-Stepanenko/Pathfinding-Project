@@ -11,10 +11,10 @@ public class TileScorer
     {
         Agents = agents;
     }
-	public Tile FindBestTile(Agent agent, AgentState state)
+	public Tile FindBestTile(Agent agent)
 	{
 		Dictionary<Vector2I, Tile> bestTiles = new Dictionary<Vector2I, Tile>();
-		switch (state)
+		switch (agent.State)
 		{
 			case AgentState.Attacking:
 				bestTiles = FindBestAttackTiles(agent);
@@ -80,12 +80,12 @@ public class TileScorer
                 bestTiles.Add(tile.Key, tile.Value);
             }
         }
-		var bestTileReachable = false;
+        var bestTileReachable = false;
         var reachableTiles = GridManager.Instance.GetReachableTiles(agent.GridPosition, agent.MoveRange);
         foreach (var tile in bestTiles)
         {
 			if (reachableTiles.Contains(tile.Value)) bestTileReachable = true;
-            GD.Print(agent.Name + " Best tile is: " + tile.Key + " Score: " + bestScore);
+            //GD.Print(agent.Name + " Best tile is: " + tile.Key + " Score: " + bestScore);
         }
 
         // If best tile not reachable and there is a neighbouring enemy, don't move
@@ -129,7 +129,7 @@ public class TileScorer
         }
         foreach (var tile in bestTiles)
         {
-            GD.Print(agent.Name + " Best tile is: " + tile.Key + " Score: " + bestScore);
+            //GD.Print(agent.Name + " Best tile is: " + tile.Key + " Score: " + bestScore);
         }
 
         var closest = GridManager.Instance.FindClosestTile(bestTiles, agent.GridPosition);
@@ -187,7 +187,7 @@ public class TileScorer
         }
         foreach (var tile in bestTiles)
         {
-            GD.Print(agent.Name + " Best tile is: " + tile.Key + " Score: " + bestScore);
+            //GD.Print(agent.Name + " Best tile is: " + tile.Key + " Score: " + bestScore);
         }
         return bestTiles;
     }
@@ -216,7 +216,7 @@ public class TileScorer
         }
         foreach (var tile in bestTiles)
         {
-            GD.Print(agent.Name + " Best tile is: " + tile.Key + " Score: " + bestScore);
+            //GD.Print(agent.Name + " Best tile is: " + tile.Key + " Score: " + bestScore);
         }
         return bestTiles;
     }
@@ -377,7 +377,6 @@ public class TileScorer
                 }
             }
         }
-        var agents = Agents;
         // Check if a friendly agent that isn't in formation can move to a neighbour tile
         if (score == 0)
 		{
@@ -386,7 +385,7 @@ public class TileScorer
                 if (GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, true, Agents))
                 {
                     var enemyAgentNearby = false;
-                    foreach (var otherAgent in agents)
+                    foreach (var otherAgent in Agents)
                     {
                         if (otherAgent.Value.Team != agent.Team) {
                             foreach (var otherAgentNeighbour in GridManager.Instance.GetNeighbourTiles(otherAgent.Key))
@@ -415,8 +414,9 @@ public class TileScorer
 		}
 		if (score > 0)
         {
+            bool addedTerrainBonus = false;
             Dictionary<Agent, int> scoredAgents = new Dictionary<Agent, int>();
-            foreach (var otherAgent in agents)
+            foreach (var otherAgent in Agents)
 			{
 				if (otherAgent.Value.Team == TurnManager.Instance.TeamTurn) continue;
                 scoredAgents.Add(otherAgent.Value, -1);
@@ -432,7 +432,7 @@ public class TileScorer
                     }
 
                     // Terrain should only matter if there is an enemy close to agent's move range
-                    if (newCost <= agent.MoveRange + 1)
+                    if (newCost <= agent.MoveRange + 1 && !addedTerrainBonus)
                     {
                         switch (tile.Terrain)
                         {
@@ -448,6 +448,7 @@ public class TileScorer
                                 score -= 5;
                                 break;
                         }
+                        addedTerrainBonus = true;
                     }
                 }
 			}
@@ -583,6 +584,7 @@ public class TileScorer
                     score += otherAgent.Value * 3;
                 }
             }
+            score /= scoredAgents.Count;
         }
         if (score > 0)
         {
@@ -622,7 +624,7 @@ public class TileScorer
             .GetReachableTiles(agentPos, agent.MoveRange)
             .Contains(tile))
         {
-            score = 100;
+            score = 10;
         }
         if (score == 0)
         {
@@ -667,6 +669,7 @@ public class TileScorer
                     score -= otherAgent.Value * 3;
                 }
             }
+            score /= scoredAgents.Count;
         }
         if (score > 0)
         {

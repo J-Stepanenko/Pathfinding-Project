@@ -23,6 +23,7 @@ TurnManager="*res://scripts/TurnManager.cs"
 AgentStateMachine="*res://scripts/AgentStateManager.cs"
 CombatManager="*res://scripts/CombatManager.cs"
 AIManager="*res://scripts/AIManager.cs"
+ScoreManager="*res://scripts/ScoreManager.cs"
 
 [display]
 

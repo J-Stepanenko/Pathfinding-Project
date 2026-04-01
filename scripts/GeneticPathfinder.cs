@@ -5,11 +5,13 @@ using System.Linq;
 
 public static partial class GeneticPathfinder
 {
-	const int PopulationSize = 20;
+	const int PopulationSize = 30;
 	const int TournamentSelectionAmount = 10;
 	const double MutationChance = 0.05;
 	const int MutationChangeMax = 3;
-	const int Generations = 5;
+	const int Generations = 10;
+	const double CrossoverRate = 0.8;
+	const int ElitismCount = 1;
 
 	private static Dictionary<Vector2I, int> CreatePopulationAndGetFitness(Agent agent)
 	{
@@ -73,33 +75,66 @@ public static partial class GeneticPathfinder
 	{
 		var tileScorer = new TileScorer(agents);
 		return tileScorer.GetScoreForTile(tile, agent);
-	}
+    }
 
-	private static Dictionary<Vector2I, int> TournamentSelection(Dictionary<Vector2I, int> scores)
-	{
-		var selectedTiles = new Dictionary<Vector2I, int>();
-		// Doesn't randomly select tiles, so will always select tiles in same order if there are multiple of same score
-		foreach(var tile in scores)
+    private static Dictionary<Vector2I, int> SelectElites(Dictionary<Vector2I, int> scores)
+    {
+        var selectedTiles = new Dictionary<Vector2I, int>();
+
+#pragma warning disable CS0162 // Unreachable code detected
+        if (ElitismCount == 0) return selectedTiles;
+#pragma warning restore CS0162 // Unreachable code detected
+
+        // Doesn't randomly select tiles, so will always select tiles in same order if there are multiple of same score
+        foreach (var tile in scores)
+        {
+            if (selectedTiles.Count < ElitismCount)
+            {
+                selectedTiles.Add(tile.Key, tile.Value);
+            }
+            else if (tile.Value > selectedTiles.MinBy(kvp => kvp.Value).Value)
+            {
+                selectedTiles.Remove(selectedTiles.MinBy(kvp => kvp.Value).Key);
+                selectedTiles.Add(tile.Key, tile.Value);
+            }
+        }
+        return selectedTiles;
+    }
+
+    private static Vector2I TournamentSelection(Dictionary<Vector2I, int> scores)
+    {
+		var scoresList = scores.Keys.ToList();
+		var selectedTiles = new List<Vector2I>();
+		var rng = new Random();
+		var indexes = new List<int>();
+		while (indexes.Count < TournamentSelectionAmount)
 		{
-			if (selectedTiles.Count < TournamentSelectionAmount)
-			{
-				selectedTiles.Add(tile.Key, tile.Value);
-			}
-			else if (tile.Value > selectedTiles.MinBy(kvp => kvp.Value).Value)
-			{
-				selectedTiles.Remove(selectedTiles.MinBy(kvp => kvp.Value).Key);
-				selectedTiles.Add(tile.Key, tile.Value);
-			}
+			indexes.Add(rng.Next(0, scoresList.Count));
+            selectedTiles.Add(scoresList[indexes.Last()]);
+            scoresList.Remove(scoresList[indexes.Last()]);
 		}
-		return selectedTiles;
-	}
+		var parent = scores.MaxBy(kvp => selectedTiles.Contains(kvp.Key)).Key;
 
-	private static Vector2I CrossoverAndMutate(Vector2I parent1, Vector2I parent2, Vector2I maxGridSize)
+		return parent;
+    }
+
+    private static Vector2I TryCrossoverAndMutate(Vector2I parent1, Vector2I parent2, Vector2I maxGridSize)
 	{
 		var combinedX = (int)Math.Round((double)(parent1.X + parent2.X) / 2);
         var combinedY = (int)Math.Round((double)(parent1.Y + parent2.Y) / 2);
 		var child = new Vector2I(combinedX, combinedY);
 		var rng = new Random();
+		if (rng.NextDouble() > CrossoverRate) 
+		{
+			if (rng.Next(1,3) == 1)
+			{
+				child = parent1;
+			}
+			else
+			{
+				child = parent2;
+			}
+		}
 		if (rng.NextDouble() <= MutationChance)
 		{
 			if (rng.Next(1, 3) == 1)
@@ -121,7 +156,7 @@ public static partial class GeneticPathfinder
         return child;
     }
 
-	public static Dictionary<Vector2I, Agent> RunGA(List<Agent> agents)
+	public static Dictionary<Vector2I, Agent> RunGA(List<Agent> agentsToBeMoved)
 	{
 		var newAgentPositions = new Dictionary<Vector2I, Agent>(GridManager.Instance.Agents);
 		var agentMoves = new Dictionary<Agent, Vector2I>();
@@ -131,13 +166,28 @@ public static partial class GeneticPathfinder
         var maxGridY = GridManager.Instance.Tiles.Keys.Max(pos => pos.Y);
         var maxGridSize = new Vector2I(maxGridX, maxGridY);
 
+		var maxMoveRange = agentsToBeMoved[0].MoveRange;
+
+		GD.Print("Agents to be moved count: " + agentsToBeMoved.Count);
         for (int i = 1; i <= Generations; i++)
         {
-			//agentMoves.Clear();
-			foreach (var agent in agents) agent.CanMove = true;
+			GD.Print("Generation " + i);
 
-			foreach (var agent in agents)
+			if (i > 1)
+			{
+				// Reduce move range by distance from real location
+				// Required for tile scoring checking for nearby friendlies that can form up
+				foreach (var agent in agentsToBeMoved)
+				{
+					agent.CanMove = true;
+					GridManager.Instance.GetPath(agent.GridPosition, agentMoves[agent], out var cost);
+					agent.MoveRange -= cost;
+				}
+			}
+
+			foreach (var agent in agentsToBeMoved)
             {
+				agent.MoveRange = maxMoveRange;
                 Dictionary<Vector2I, int> population;
 				if (i == 1)
 				{
@@ -147,39 +197,31 @@ public static partial class GeneticPathfinder
 				{
                     population = agentPopulations[agent];
                 }
-				var parents = TournamentSelection(population);
-				population.Clear();
-				foreach (var parent in parents)
-				{
-					population.Add(parent.Key, parent.Value);
-				}
 				var rng = new Random();
 				var loopTimes = 0;
-				while (population.Count < PopulationSize)
-                {
-                    if (loopTimes >= 100) break;
-                    var parentList = parents.Keys.ToList();
-					var count = parentList.Count;
+
+				// Create children until population cap is reached
+				var tempPop = SelectElites(population);
+				while (tempPop.Count < PopulationSize)
+				{
+					if (loopTimes >= PopulationSize*100) break;
+					var count = population.Count;
 					var val = rng.Next(count);
-					var parent1 = parentList[val];
+					var parent1 = TournamentSelection(population);
 					val = rng.Next(count);
-					var parent2 = parentList[val];
+					var parent2 = TournamentSelection(population);
 					while (parent2 == parent1)
 					{
 						val = rng.Next(count);
-						parent2 = parentList[val];
+						parent2 = TournamentSelection(population);
+						break;
 					}
-					var child = CrossoverAndMutate(parent1, parent2, maxGridSize);
-					if (!population.ContainsKey(child))
+					var child = TryCrossoverAndMutate(parent1, parent2, maxGridSize);
+					if (!tempPop.ContainsKey(child))
 					{
-						population.Add(child, 0);
+						tempPop.Add(child, FindFitness(child, agent, newAgentPositions));
 					}
 					loopTimes++;
-				}
-				var tempPop = new Dictionary<Vector2I, int>();
-				foreach (var pop in population)
-				{
-					tempPop.Add(pop.Key, FindFitness(pop.Key, agent, newAgentPositions));
 				}
 				population = tempPop;
                 Vector2I previousPos;
@@ -191,10 +233,13 @@ public static partial class GeneticPathfinder
                 {
                     previousPos = agentMoves[agent];
                 }
+
+				// Should be made redundant by same line beneath, but prevents a rare exception within the dictionary
                 newAgentPositions.Remove(previousPos);
 
                 var (bestTile, bestTileScore) = population.MaxBy(kvp => kvp.Value);
-				var tileScorer = new TileScorer(newAgentPositions);
+                var tileScorer = new TileScorer(newAgentPositions);
+				// Check if current tile has a higher score than tiles in population
 				if (tileScorer.GetScoreForTile(agent.GridPosition, agent) > bestTileScore)
 				{
 					bestTile = agent.GridPosition;
@@ -203,6 +248,7 @@ public static partial class GeneticPathfinder
 				{
 					var path = GridManager.Instance.GetPath(agent.GridPosition, bestTile, agent.MoveRange);
 					var idx = path.Count - 1;
+					// Loop to find a path to the best tile
 					while (true)
 					{
 						if (idx < 0)
@@ -211,47 +257,36 @@ public static partial class GeneticPathfinder
 							break;
 						}
 						var pathTile = path[idx];
-						GD.Print("try get: " + newAgentPositions.TryGetValue(pathTile, out _) + " path tile: " + pathTile);
-						if (!newAgentPositions.TryGetValue(pathTile, out _))
+                        GD.Print("Best tile: " + bestTile + " score " + bestTileScore);
+                        GD.Print("Last tile in path: " + path.Last());
+                        GD.Print("Path tile: " + pathTile);
+                        GD.Print("try get: " + newAgentPositions.TryGetValue(pathTile, out _) + " path tile: " + pathTile);
+						// If tile is not occupied
+                        if (!newAgentPositions.TryGetValue(pathTile, out _))
 						{
-							GD.Print("Best tile: " + bestTile + " score " + bestTileScore);
-							GD.Print("Last tile in path: " + path.Last());
-							GD.Print("Path tile: " + pathTile);
 							if (agent.State == AgentState.Attacking)
 							{
-								var neighbouringEnemyCurrTile = false;
 								var neighbouringEnemyPathTile = false;
-								foreach (var tile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition))
-								{
-									var otherAgent = GridManager.Instance.GetAgent(tile.Key);
-
-                                    if (otherAgent != null && otherAgent.Team != agent.Team)
-									{
-										neighbouringEnemyCurrTile = true;
-										break;
-									}
-								}
 								foreach (var tile in GridManager.Instance.GetNeighbourTiles(pathTile))
 								{
 									var otherAgent = GridManager.Instance.GetAgent(tile.Key);
-
                                     if (otherAgent != null && otherAgent.Team != agent.Team)
 									{
 										neighbouringEnemyPathTile = true;
 										break;
 									}
-								}
+                                }
 
-                                // If agent is currently next to an enemy, but the tile it is trying to path towards is not next to an enemy
+                                // If agent is pathing towards an enemy, but the final tile it goes to isn't next to an enemy
                                 // Then try to find a tile along the path that still neighbours an enemy
-                                if (neighbouringEnemyCurrTile && !neighbouringEnemyPathTile)
-								{
-									var pathIdx = path.Count - 2; // skip last tile, already checked
-									var foundTile = false;
+                                if (!neighbouringEnemyPathTile)
+                                {
+                                    var pathIdx = path.Count - 1;
 									while (pathIdx > 0)
-									{
-										// If tile is occupied
-										if (GridManager.Instance.GetAgent(path[pathIdx], newAgentPositions) != null)
+                                    {
+                                        pathIdx--; // skip last tile, already checked
+                                        // If tile is occupied
+                                        if (newAgentPositions.TryGetValue(path[pathIdx], out _))
 										{
 											pathIdx--;
 											continue;
@@ -260,27 +295,51 @@ public static partial class GeneticPathfinder
 										{
                                             var otherAgent = GridManager.Instance.GetAgent(tile.Key);
 
-                                            if (otherAgent != null && otherAgent.Team != agent.Team)
+                                            if (otherAgent != null && otherAgent.Team != agent.Team && !newAgentPositions.TryGetValue(path[pathIdx], out _))
                                             {
-												foundTile = true;
+                                                pathTile = path[pathIdx];
+                                                neighbouringEnemyPathTile = true;
 												break;
                                             }
                                         }
-										if (foundTile)
-										{
-											pathTile = path[pathIdx];
-										}
-										pathIdx--;
-									}
+                                    }
+
+									// Check tile currently stood on if no suitable tiles were found along the path
+									if (!neighbouringEnemyPathTile)
+									{
+                                        foreach (var tile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition))
+                                        {
+                                            var otherAgent = GridManager.Instance.GetAgent(tile.Key);
+
+                                            if (otherAgent != null && otherAgent.Team != agent.Team)
+                                            {
+                                                pathTile = agent.GridPosition;
+                                            }
+                                        }
+                                    }
                                 }
-							}
-							bestTile = pathTile;
+                            }
+                            GD.Print(agent.Name + " Generation " + i + " best tile at " + bestTile + " with score " + bestTileScore + " pathing to " + pathTile);
+                            bestTile = pathTile;
 							break;
 						}
 						idx--;
 					}
-				}
-				newAgentPositions.Remove(agent.GridPosition);
+                }
+
+                // If this is the final generation, add final score to ScoreManager
+                if (i == Generations)
+                {
+					var tempScorer = new TileScorer(GridManager.Instance.Agents);
+                    ScoreManager.Instance.AddScore(agent, bestTileScore);
+
+					//var bestTileControl = tempScorer.FindBestTile(agent).GridPosition;
+					//var controlPath = GridManager.Instance.GetPath(agent.GridPosition, bestTileControl, maxMoveRange);
+     //               ScoreManager.Instance.AddVariance(bestTile, controlPath.Last(), agent);
+                }
+
+                GD.Print(agent.Name + "Adding best tile to dict: " + bestTile);
+				newAgentPositions.Remove(previousPos);
 				agentMoves.Remove(agent);
 
 				agentMoves.Add(agent, bestTile);
@@ -289,12 +348,11 @@ public static partial class GeneticPathfinder
 				agentPopulations.Remove(agent);
 				agentPopulations.Add(agent, population);
 				agent.CanMove = false;
-				GD.Print("Generation " + i + " best tile at " + bestTile + " with score " + bestTileScore);
             }
 			// Clear dictionary of only the agents actually simulating moves, ie. the ones on the team whose turn it is currently
 			foreach (var (pos, agent) in newAgentPositions)
 			{
-				if (agent.Team == agents[0].Team)
+				if (agent.Team == agentsToBeMoved[0].Team)
 				{
 					newAgentPositions.Remove(pos);
 				}
@@ -305,6 +363,22 @@ public static partial class GeneticPathfinder
 				newAgentPositions.Add(move, agent);
 			}
 		}
-		return newAgentPositions;
+
+		foreach(var agent in agentsToBeMoved)
+		{
+			agent.MoveRange = maxMoveRange;
+			agent.CanMove = true;
+		}
+
+        // Clear dictionary of the agents whose moves are not being calculated this turn
+        foreach (var (pos, agent) in newAgentPositions)
+        {
+            if (agent.Team != agentsToBeMoved[0].Team)
+            {
+                newAgentPositions.Remove(pos);
+            }
+        }
+
+        return newAgentPositions;
     }
 }

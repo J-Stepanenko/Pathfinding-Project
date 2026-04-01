@@ -23,25 +23,29 @@ public partial class AIManager : Node
 	{
         var pathfindingNode = (PathfindingToggler)GetNode("/root/Scene/PathfindingToggler");
         pathfindingNode.Team1BasicPathfindingEnabled += SetPathfindingToBasicTeam1;
-        pathfindingNode.Team2BasicPathfindingEnabled += SetPathfindingToBasicTeam1;
+        pathfindingNode.Team2BasicPathfindingEnabled += SetPathfindingToBasicTeam2;
         pathfindingNode.Team1GeneticAlgorithmEnabled += SetGeneticAlgorithmEnabledTeam1;
-        pathfindingNode.Team2GeneticAlgorithmEnabled += SetGeneticAlgorithmEnabledTeam1;
+        pathfindingNode.Team2GeneticAlgorithmEnabled += SetGeneticAlgorithmEnabledTeam2;
     }
 
     private void SetPathfindingToBasicTeam1()
     {
+        GD.Print("Team 1 basic pathfinding");
         Team1BasicPathfindingEnabled = true;
     }
     private void SetPathfindingToBasicTeam2()
     {
+        GD.Print("Team 2 basic pathfinding");
         Team2BasicPathfindingEnabled = true;
     }
     private void SetGeneticAlgorithmEnabledTeam1()
     {
+        GD.Print("Team 1 genetic pathfinding");
         Team1GeneticAlgorithmEnabled = true;
     }
     private void SetGeneticAlgorithmEnabledTeam2()
     {
+        GD.Print("Team 2 genetic pathfinding");
         Team2GeneticAlgorithmEnabled = true;
     }
 
@@ -52,167 +56,128 @@ public partial class AIManager : Node
         foreach (var agent in agentsDict)
         {
             agentsValues.Add(agent.Value);
+            if (agent.Value.Team == TurnManager.Instance.TeamTurn)
+            {
+                agent.Value.State = agent.Value.CheckState();
+            }
         }
 
-        if (TurnManager.Instance.TeamTurn == 1)
+        bool basicPathfinding = false;
+        bool geneticAlgorithm = false;
+
+        var team = TurnManager.Instance.TeamTurn;
+        if (team == 1)
         {
-            // Basic pathfinding using A* to go directly to closest enemy
-            if (Team1BasicPathfindingEnabled)
+            if (Team1BasicPathfindingEnabled) basicPathfinding = true;
+            if (Team1GeneticAlgorithmEnabled) geneticAlgorithm = true;
+        }
+        else if (team == 2)
+        {
+
+            if (Team2BasicPathfindingEnabled) basicPathfinding = true;
+            if (Team2GeneticAlgorithmEnabled) geneticAlgorithm = true;
+        }
+
+        // Basic pathfinding using A* to go directly to closest enemy
+        if (basicPathfinding)
+        {
+            foreach (var agent in agentsValues)
             {
-                foreach (var agent in agentsValues)
+                if (agent.AIEnabled && agent.Team == TurnManager.Instance.TeamTurn)
                 {
-                    if (agent.AIEnabled && agent.Team == TurnManager.Instance.TeamTurn)
+                    var tileScorer = new TileScorer(GridManager.Instance.Agents);
+                    var target = tileScorer.FindAttackTarget(agent);
+                    Vector2I closest = agent.GridPosition;
+                    int lowestCost = -1;
+                    foreach (var neighbour in GridManager.Instance.GetNeighbourTiles(target.GridPosition))
                     {
-                        var tileScorer = new TileScorer(GridManager.Instance.Agents);
-                        var target = tileScorer.FindAttackTarget(agent);
-                        Vector2I closest = agent.GridPosition;
-                        int lowestCost = -1;
-                        foreach (var neighbour in GridManager.Instance.GetNeighbourTiles(target.GridPosition))
+                        if (neighbour.Key == agent.GridPosition)
                         {
-                            if (neighbour.Key == agent.GridPosition)
-                            {
-                                closest = agent.GridPosition;
-                                break;
-                            }
-                            GridManager.Instance.GetPath(agent.GridPosition, neighbour.Key, out var cost);
-                            var tile = GridManager.Instance.GetPath(agent.GridPosition, neighbour.Key, agent.MoveRange).LastOrDefault();
-
-                            // If tile is default value for Vector2I
-                            if (tile == new Vector2I(0, 0)) continue;
-
-                            if (lowestCost == -1 || cost < lowestCost && !GridManager.Instance.CheckTileHasAgent(tile))
-                            {
-                                closest = tile;
-                            }
+                            closest = agent.GridPosition;
+                            break;
                         }
-                        agent.PathTowards(closest);
-                        agent.DoAICombat();
-                    }
-                }
-            }
-            else if (Team1GeneticAlgorithmEnabled)
-            {
-                var agentsToBeMoved = new List<Agent>();
-                foreach (var agent in agentsValues)
-                {
-                    agent.TryHeal();
-                    if (agent.AIEnabled && agent.CanMove && agent.Team == TurnManager.Instance.TeamTurn)
-                    {
-                        agentsToBeMoved.Add(agent);
-                        agent.State = agent.CheckState();
-                    }
-                }
-                if (agentsToBeMoved.Count > 0)
-                {
-                    var result = GeneticPathfinder.RunGA(agentsToBeMoved);
-                    foreach (var (pos, agent) in result)
-                    {
-                        agent.PathTowards(pos);
-                    }
-                }
-            }
-            else
-            {
-                foreach (var agent in agentsValues)
-                {
-                    agent.DoAIMove();
+                        GridManager.Instance.GetPath(agent.GridPosition, neighbour.Key, out var cost);
+                        var tile = GridManager.Instance.GetPath(agent.GridPosition, neighbour.Key, agent.MoveRange).LastOrDefault();
 
-                    // Try to attack sooner in case formation is broken on the next agent's move
-                    if (agent.InFormation)
-                    {
-                        agent.DoAICombat();
-                    }
-                    else
-                    {
-                        foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition))
+                        // If tile is default value for Vector2I
+                        if (tile == new Vector2I(0, 0)) continue;
+
+                        if (lowestCost == -1 || cost < lowestCost && !GridManager.Instance.CheckTileHasAgent(tile))
                         {
-                            if (!GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, true))
-                            {
-                                // Do combat early if no friendly agents are capable of forming up, allowing other agents to go for different targets if enemy is killed
-                                agent.DoAICombat();
-                            }
+                            closest = tile;
                         }
                     }
+                    agent.PathTowards(closest);
+                    agent.DoAICombat();
                 }
             }
         }
-        else if (TurnManager.Instance.TeamTurn == 2)
+        else if (geneticAlgorithm)
         {
-            // Basic pathfinding using A* to go directly to closest enemy
-            if (Team2BasicPathfindingEnabled)
+            var agentsToBeMoved = new List<Agent>();
+            foreach (var agent in agentsValues)
             {
-                foreach (var agent in agentsValues)
+                agent.TryHeal();
+                if (agent.AIEnabled && agent.CanMove && agent.Team == TurnManager.Instance.TeamTurn)
                 {
-                    if (agent.AIEnabled && agent.Team == TurnManager.Instance.TeamTurn)
-                    {
-                        var tileScorer = new TileScorer(GridManager.Instance.Agents);
-                        var target = tileScorer.FindAttackTarget(agent);
-                        Vector2I closest = agent.GridPosition;
-                        int lowestCost = -1;
-                        foreach (var neighbour in GridManager.Instance.GetNeighbourTiles(target.GridPosition))
-                        {
-                            if (neighbour.Key == agent.GridPosition)
-                            {
-                                closest = agent.GridPosition;
-                                break;
-                            }
-                            GridManager.Instance.GetPath(agent.GridPosition, neighbour.Key, out var cost);
-                            var tile = GridManager.Instance.GetPath(agent.GridPosition, neighbour.Key, agent.MoveRange).LastOrDefault();
-
-                            // If tile is default value for Vector2I
-                            if (tile == new Vector2I(0, 0)) continue;
-
-                            if (lowestCost == -1 || cost < lowestCost && !GridManager.Instance.CheckTileHasAgent(tile))
-                            {
-                                closest = tile;
-                            }
-                        }
-                        agent.PathTowards(closest);
-                        agent.DoAICombat();
-                    }
+                    agentsToBeMoved.Add(agent);
                 }
             }
-            else if (Team2GeneticAlgorithmEnabled)
+            if (agentsToBeMoved.Count > 0)
             {
-                var agentsToBeMoved = new List<Agent>();
-                foreach (var agent in agentsValues)
+                var tileScorer = new TileScorer(GridManager.Instance.Agents);
+                var result = GeneticPathfinder.RunGA(agentsToBeMoved);
+                var loopTimesMax = 10;
+                int i = 0;
+
+                while (agentsToBeMoved.Count > 0)
                 {
-                    agent.TryHeal();
-                    if (agent.AIEnabled && agent.CanMove && agent.Team == TurnManager.Instance.TeamTurn)
-                    {
-                        agentsToBeMoved.Add(agent);
-                        agent.State = agent.CheckState();
-                    }
-                }
-                if (agentsToBeMoved.Count > 0)
-                {
-                    var result = GeneticPathfinder.RunGA(agentsToBeMoved);
+                    i++;
                     foreach (var (pos, agent) in result)
                     {
-                        agent.PathTowards(pos);
-                    }
-                }
-            }
-            else
-            {
-                foreach (var agent in agentsValues)
-                {
-                    agent.DoAIMove();
-
-                    // Try to attack sooner in case formation is broken on the next agent's move
-                    if (agent.InFormation)
-                    {
-                        agent.DoAICombat();
-                    }
-                    else
-                    {
-                        foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition))
+                        var oldPos = agent.GridPosition;
+                        var deterministicBest = tileScorer.FindBestTile(agent);
+                        var pathToBest = GridManager.Instance.GetPath(oldPos, deterministicBest.GridPosition, agent.MoveRange);
+                        var pathTile = pathToBest.Count > 0 ? pathToBest.Last() : agent.GridPosition;
+                        if (agent.PathTowards(pos))
                         {
-                            if (!GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, true))
-                            {
-                                // Do combat early if no friendly agents are capable of forming up, allowing other agents to go for different targets if enemy is killed
-                                agent.DoAICombat();
-                            }
+                            agentsToBeMoved.Remove(agent);
+                            ScoreManager.Instance.AddVariance(agent.GridPosition, pathTile, agent);
+                        }
+                    }
+                    if (i >= loopTimesMax) break;
+                }
+
+                // Remaining agents that failed to move 
+                foreach(var agent in agentsToBeMoved)
+                {
+                    var deterministicBest = tileScorer.FindBestTile(agent);
+                    var pathToBest = GridManager.Instance.GetPath(agent.GridPosition, deterministicBest.GridPosition, agent.MoveRange);
+                    var pathTile = pathToBest.Count > 0 ? pathToBest.Last() : agent.GridPosition;
+                    ScoreManager.Instance.AddVariance(agent.GridPosition, pathTile, agent);
+                }
+
+            }
+        }
+        else
+        {
+            foreach (var agent in agentsValues)
+            {
+                agent.DoAIMove();
+
+                // Try to attack sooner in case formation is broken on the next agent's move
+                if (agent.InFormation)
+                {
+                    agent.DoAICombat();
+                }
+                else
+                {
+                    foreach (var neighbourTile in GridManager.Instance.GetNeighbourTiles(agent.GridPosition))
+                    {
+                        if (!GridManager.Instance.CheckForFriendlyAgentsThatCanMoveHere(neighbourTile.Value, agent, true))
+                        {
+                            // Do combat early if no friendly agents are capable of forming up, allowing other agents to go for different targets if enemy is killed
+                            agent.DoAICombat();
                         }
                     }
                 }

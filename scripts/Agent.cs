@@ -171,10 +171,11 @@ public partial class Agent : Node2D
             if (CanMove && TurnManager.Instance.TeamTurn == this.Team)
 			{
 				InFormation = CheckInFormation();
-				State = AgentStateManager.Instance.CalculateState(this);
 
                 var tileScorer = new TileScorer(GridManager.Instance.Agents);
-                var bestTile = tileScorer.FindBestTile(this, State);
+                var bestTile = tileScorer.FindBestTile(this);
+				var score = tileScorer.GetScoreForTile(bestTile.GridPosition, this);
+				ScoreManager.Instance.AddScore(this, score);
 				PathTowards(bestTile.GridPosition);
 				CanMove = false;
 			}
@@ -254,11 +255,22 @@ public partial class Agent : Node2D
 		}
 	}
 
-	public void PathTowards(Vector2I newPos)
+	/// <summary>
+	/// Moves the agent towards a new position by its movement range. Will not move if CanMove is false.
+	/// </summary>
+	/// <param name="newPos"></param>
+	/// <returns>True if it has successfully moved or is unable to move due to CanMove being false, false if not (ie. blocked by another agent)</returns>
+	public bool PathTowards(Vector2I newPos)
 	{
+		if (newPos == GridPosition)
+		{
+			CanMove = false;
+			return true;
+		}
         var path = GridManager.Instance.GetPath(this.GridPosition, newPos, MoveRange);
-        if (path.Count != 0)
+        if (path.Count != 0 && CanMove)
         {
+			var hasMoved = false;
             for (var i = 0; i < path.Count; i++)
             {
                 var tile = path[path.Count - 1 - i];
@@ -268,17 +280,24 @@ public partial class Agent : Node2D
                 }
                 else
                 {
+					hasMoved = true;
                     MoveAgent(tile);
                     break;
                 }
             }
+			return hasMoved;
         }
+		else if (CanMove)
+        {
+            return false;
+        }
+        return true;
     }
 
 	public AgentState CheckState()
 	{
 		var state = AgentStateManager.Instance.CalculateState(this);
-        GD.Print("Agent: " + Name + " is in state: " + State + " at position: " + GridPosition);
+        GD.Print("Agent: " + Name + " is in state: " + state + " at position: " + GridPosition);
         return state;
 	}
 
